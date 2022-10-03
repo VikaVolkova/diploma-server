@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/VikaVolkova/diploma-server#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
+    "mongoose": "^6.6.3",
     "nodemon": "^2.0.20"
   }
 }
