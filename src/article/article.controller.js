@@ -22,4 +22,20 @@ const getArticles = async (req, res, next) => {
   }
 };
 
+// const getArticleByUrl = async (req, res, next) => {
+//   const url = Number(req.params.url);
+//   try {
+//     const article = await Article.find({ url: url });
+
+//     if (!article || !article.isPublished) {
+//       return res.status(404).text("Article is not found");
+//     }
+
+//     return res.status(200).json(article);
+//   } catch (err) {
+//     return next(err);
+//   }
+// };
+
 exports.getArticles = getArticles;
+exports.getArticleByUrl = getArticleByUrl;

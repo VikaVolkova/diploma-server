@@ -32,6 +32,10 @@ const articleSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  url: {
+    type: String,
+    maxlength: 30,
+  },
 });
 
 const Article = mongoose.model("Article", articleSchema);
