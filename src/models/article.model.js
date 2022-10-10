@@ -9,6 +9,7 @@ const articleSchema = new mongoose.Schema({
   },
   spoiler: {
     type: String,
+    required: true,
     minlength: 30,
     maxlength: 100,
   },
@@ -20,22 +21,32 @@ const articleSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+    required: true,
     minlength: 100,
     maxlength: 1000,
   },
   category: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
   },
-  author: String,
-  isPublished: Boolean,
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  isPublished: {
+    type: Boolean,
+  },
   date: {
     type: Date,
     default: new Date(),
   },
   url: {
     type: String,
+    required: true,
     maxlength: 30,
   },
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const Article = mongoose.model("Article", articleSchema);
