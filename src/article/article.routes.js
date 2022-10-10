@@ -7,4 +7,6 @@ articleRoutes.get("/", controller.getArticles);
 
 articleRoutes.get("/:url", controller.getArticleByUrl);
 
+articleRoutes.get("/category/:categoryId", controller.getArticlesByCategoryId);
+
 module.exports = articleRoutes;
