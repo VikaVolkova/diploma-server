@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
 
 const commentSchema = new mongoose.Schema({
   text: {
