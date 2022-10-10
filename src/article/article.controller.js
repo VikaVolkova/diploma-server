@@ -22,20 +22,20 @@ const getArticles = async (req, res, next) => {
   }
 };
 
-// const getArticleByUrl = async (req, res, next) => {
-//   const url = Number(req.params.url);
-//   try {
-//     const article = await Article.find({ url: url });
+const getArticleByUrl = async (req, res, next) => {
+  const url = req.params.url;
+  try {
+    const article = await Article.findOne({ url: url }).exec();
 
-//     if (!article || !article.isPublished) {
-//       return res.status(404).text("Article is not found");
-//     }
+    if (!article || !article.isPublished) {
+      throw new Error("Article is not found");
+    }
 
-//     return res.status(200).json(article);
-//   } catch (err) {
-//     return next(err);
-//   }
-// };
+    return res.status(200).json(article);
+  } catch (err) {
+    return next(err);
+  }
+};
 
 exports.getArticles = getArticles;
 exports.getArticleByUrl = getArticleByUrl;

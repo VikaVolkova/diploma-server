@@ -5,6 +5,6 @@ const articleRoutes = express.Router();
 
 articleRoutes.get("/", controller.getArticles);
 
-// articleRoutes.get("/:url", controller.getArticleByUrl);
+articleRoutes.get("/:url", controller.getArticleByUrl);
 
 module.exports = articleRoutes;
