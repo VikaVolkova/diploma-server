@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
+const Comment = require("./comment.model");
 
 const articleSchema = new mongoose.Schema({
   title: {
@@ -46,7 +48,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     maxlength: 30,
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: Comment }],
 });
 
 const Article = mongoose.model("Article", articleSchema);

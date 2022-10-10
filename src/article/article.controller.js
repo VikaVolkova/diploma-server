@@ -1,5 +1,7 @@
 const { Article } = require("../models/article.model");
+const { Category } = require("../models/category.model");
 const { getParcedLimit } = require("../common/GetLimit");
+const { default: mongoose } = require("mongoose");
 
 const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
@@ -37,23 +39,35 @@ const getArticleByUrl = async (req, res, next) => {
   }
 };
 
-const getArticlesByCategoryId = async (req, res, next) => {
+const getArticlesByCategoryUrl = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
   const skip = Number(req.query.skip) || 0;
-  const categoryId = Number(req.params.categoryId);
+  const categoryUrl = req.params.categoryUrl;
+
   try {
+    const category = await Category.findOne({ url: categoryUrl });
+    const categoryId = category.id;
     const articles = await Article.find({
       category: categoryId,
-      isPublished: true,
     })
+      .populate([
+        {
+          path: "category",
+          model: "Category",
+        },
+        {
+          path: "author",
+          model: "Author",
+        },
+        {
+          path: "comments",
+          model: "Comment",
+        },
+      ])
       .sort({ date: -1 })
       .limit(limit)
       .skip(skip);
-
-    const count = await Article.find({
-      category: categoryId,
-      isPublished: true,
-    }).count();
+    const count = await Article.find({ category: categoryId }).count();
     return res.status(200).json({
       articles,
       limit,
@@ -68,5 +82,5 @@ const getArticlesByCategoryId = async (req, res, next) => {
 module.exports = {
   getArticles: getArticles,
   getArticleByUrl: getArticleByUrl,
-  getArticlesByCategoryId: getArticlesByCategoryId,
+  getArticlesByCategoryUrl: getArticlesByCategoryUrl,
 };
