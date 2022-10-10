@@ -25,7 +25,7 @@ const getArticles = async (req, res, next) => {
 const getArticleByUrl = async (req, res, next) => {
   const url = req.params.url;
   try {
-    const article = await Article.findOne({ url: url }).exec();
+    const article = await Article.findOne({ url: url });
 
     if (!article || !article.isPublished) {
       throw new Error("Article is not found");
@@ -37,5 +37,36 @@ const getArticleByUrl = async (req, res, next) => {
   }
 };
 
-exports.getArticles = getArticles;
-exports.getArticleByUrl = getArticleByUrl;
+const getArticlesByCategoryId = async (req, res, next) => {
+  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
+  const skip = Number(req.query.skip) || 0;
+  const categoryId = Number(req.params.categoryId);
+  try {
+    const articles = await Article.find({
+      category: categoryId,
+      isPublished: true,
+    })
+      .sort({ date: -1 })
+      .limit(limit)
+      .skip(skip);
+
+    const count = await Article.find({
+      category: categoryId,
+      isPublished: true,
+    }).count();
+    return res.status(200).json({
+      articles,
+      limit,
+      skip,
+      count,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+module.exports = {
+  getArticles: getArticles,
+  getArticleByUrl: getArticleByUrl,
+  getArticlesByCategoryId: getArticlesByCategoryId,
+};
