@@ -12,4 +12,6 @@ articleRoutes.get(
   controller.getArticlesByCategoryUrl
 );
 
+articleRoutes.post("/", controller.createArticle);
+
 module.exports = articleRoutes;

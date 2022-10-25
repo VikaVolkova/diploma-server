@@ -1,7 +1,6 @@
 const { Article } = require("../models/article.model");
 const { Category } = require("../models/category.model");
 const { getParcedLimit } = require("../common/GetLimit");
-const { default: mongoose } = require("mongoose");
 
 const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
@@ -79,8 +78,24 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
   }
 };
 
+const createArticle = async (req, res, next) => {
+  let article = new Article({
+    ...req.body,
+    isPublished: false,
+    date: new Date(),
+  });
+
+  try {
+    article = await article.save();
+    res.status(201).send(article);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
 module.exports = {
   getArticles: getArticles,
   getArticleByUrl: getArticleByUrl,
   getArticlesByCategoryUrl: getArticlesByCategoryUrl,
+  createArticle: createArticle,
 };
