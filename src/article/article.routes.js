@@ -14,4 +14,6 @@ articleRoutes.get(
 
 articleRoutes.post("/", controller.createArticle);
 
+articleRoutes.delete("/:id", controller.deleteArticle);
+
 module.exports = articleRoutes;
