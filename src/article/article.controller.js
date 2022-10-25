@@ -93,9 +93,24 @@ const createArticle = async (req, res, next) => {
   }
 };
 
+const deleteArticle = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    const article = await Article.findById(id);
+    if (!article) return res.status(404).send("Article is not found");
+    // if (article.uid !== req.user._id)
+    //   return res.status(401).send("Todo deletion failed");
+    const deletedTodo = await Article.findByIdAndDelete(id);
+    res.status(200).send(deletedTodo);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
 module.exports = {
   getArticles: getArticles,
   getArticleByUrl: getArticleByUrl,
   getArticlesByCategoryUrl: getArticlesByCategoryUrl,
   createArticle: createArticle,
+  deleteArticle: deleteArticle,
 };
