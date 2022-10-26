@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = require("mongoose").Schema;
-const Comment = require("./comment.model");
+const { Category } = require("./category.model");
+const { User } = require("./user.model");
+const { Comment } = require("./comment.model");
 
 const articleSchema = new mongoose.Schema({
   title: {
@@ -28,13 +29,13 @@ const articleSchema = new mongoose.Schema({
     maxlength: 1000,
   },
   category: {
-    type: Schema.Types.ObjectId,
-    ref: "Category",
+    type: String,
+    ref: Category,
     required: true,
   },
   author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
+    ref: User,
   },
   isPublished: {
     type: Boolean,
@@ -48,7 +49,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     maxlength: 30,
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: Comment }],
+  comments: [{ type: String, ref: Comment }],
 });
 
 const Article = mongoose.model("Article", articleSchema);
