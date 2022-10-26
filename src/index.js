@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const articleRoutes = require("./article/article.routes");
 const categoryRoutes = require("./category/category.routes");
+const userRoutes = require("./user/user.routes");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/api/news", articleRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to api");
