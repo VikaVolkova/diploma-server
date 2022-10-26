@@ -1,12 +1,27 @@
 const { Article } = require("../models/article.model");
 const { Category } = require("../models/category.model");
 const { getParcedLimit } = require("../common/GetLimit");
+const mongoose = require("mongoose");
 
 const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
   const skip = Number(req.query.skip) || 0;
   try {
     const articles = await Article.find({ isPublished: true })
+      .populate([
+        {
+          path: "category",
+          model: "Category",
+        },
+        {
+          path: "author",
+          model: "User",
+        },
+        {
+          path: "comments",
+          model: "Comment",
+        },
+      ])
       .sort({ date: -1 })
       .limit(limit)
       .skip(skip);
@@ -45,7 +60,7 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
 
   try {
     const category = await Category.findOne({ url: categoryUrl });
-    const categoryId = category.id;
+    const categoryId = category._id;
     const articles = await Article.find({
       category: categoryId,
     })
@@ -56,7 +71,7 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
         },
         {
           path: "author",
-          model: "Author",
+          model: "User",
         },
         {
           path: "comments",
