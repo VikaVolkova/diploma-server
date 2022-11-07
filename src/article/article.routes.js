@@ -16,7 +16,7 @@ articleRoutes.get(
 
 articleRoutes.post("/", auth, controller.createArticle);
 
-articleRoutes.post("/:id/publish", auth, controller.publishArticle);
+articleRoutes.post("/publish/:id", auth, controller.publishArticle);
 
 articleRoutes.delete("/:id", auth, controller.deleteArticle);
 

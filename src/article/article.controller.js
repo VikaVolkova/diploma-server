@@ -126,7 +126,6 @@ const publishArticle = async (req, res, next) => {
 const deleteArticle = async (req, res, next) => {
   const id = req.params.id;
   const user = req.user;
-  console.log(user);
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
