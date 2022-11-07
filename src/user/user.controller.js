@@ -8,6 +8,7 @@ const makeTokenPayload = (user) => ({
   _id: user._id,
   name: user.name,
   email: user.email,
+  role: user.role,
 });
 
 const makeAccessToken = (user) => {
@@ -40,7 +41,6 @@ const register = async (req, res, next) => {
     user.password = await bcrypt.hash(user.password, salt);
 
     await user.save();
-
     const token = makeAccessToken(user);
 
     res.send(token);

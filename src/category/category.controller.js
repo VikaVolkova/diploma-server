@@ -11,7 +11,11 @@ const getCategories = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
   let category = new Category({ ...req.body });
+  const user = req.user;
   try {
+    if (user.role != "Admin" && user.role != "Manager") {
+      return res.status(401).send("Access denied");
+    }
     category = await category.save();
     res.status(201).send(category);
   } catch (err) {

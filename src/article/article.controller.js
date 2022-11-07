@@ -107,15 +107,31 @@ const createArticle = async (req, res, next) => {
   }
 };
 
-const deleteArticle = async (req, res, next) => {
+const publishArticle = async (req, res, next) => {
   const id = req.params.id;
+  const user = req.user;
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
-    // if (article.uid !== req.user._id)
-    //   return res.status(401).send("Todo deletion failed");
-    const deletedTodo = await Article.findByIdAndDelete(id);
-    res.status(200).send(deletedTodo);
+    if (user.role != "Admin") return res.status(401).send("Access denied");
+    const publishedArticle = await Article.findByIdAndUpdate(id, {
+      isPublished: true,
+    });
+    res.status(200).send(publishedArticle);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
+const deleteArticle = async (req, res, next) => {
+  const id = req.params.id;
+  const user = req.user;
+  try {
+    const article = await Article.findById(id);
+    if (!article) return res.status(404).send("Article is not found");
+    if (user.role != "Admin") return res.status(401).send("Access denied");
+    const deletedArticle = await Article.findByIdAndDelete(id);
+    res.status(200).send(deletedArticle);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -126,5 +142,6 @@ module.exports = {
   getArticleByUrl: getArticleByUrl,
   getArticlesByCategoryUrl: getArticlesByCategoryUrl,
   createArticle: createArticle,
+  publishArticle: publishArticle,
   deleteArticle: deleteArticle,
 };
