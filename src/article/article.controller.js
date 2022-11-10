@@ -1,6 +1,6 @@
 const { Article } = require("../models/article.model");
 const { Category } = require("../models/category.model");
-const { getParcedLimit } = require("../common/GetLimit");
+const { getParcedLimit } = require("../common/getLimit");
 
 const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
