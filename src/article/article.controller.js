@@ -22,8 +22,8 @@ const getArticles = async (req, res, next) => {
         },
       ])
       .sort({ date: -1 })
-      .limit(limit)
-      .skip(skip);
+      .limit({ limit })
+      .skip({ skip });
 
     const count = await Article.find({ isPublished: true }).count();
     return res.status(200).json({
