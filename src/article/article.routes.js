@@ -4,13 +4,12 @@ const auth = require("../middleware/auth");
 
 const articleRoutes = express.Router();
 
-articleRoutes.get("/", auth, controller.getArticles);
+articleRoutes.get("/", controller.getArticles);
 
-articleRoutes.get("/:url", auth, controller.getArticleByUrl);
+articleRoutes.get("/:url", controller.getArticleByUrl);
 
 articleRoutes.get(
   "/category/:categoryUrl",
-  auth,
   controller.getArticlesByCategoryUrl
 );
 
