@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/api/news", articleRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/comment", commentRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to api");

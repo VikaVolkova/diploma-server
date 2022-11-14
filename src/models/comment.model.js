@@ -6,6 +6,9 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isPublished: {
+    type: Boolean,
+  },
   authorId: {
     type: Schema.Types.ObjectId,
     ref: "User",

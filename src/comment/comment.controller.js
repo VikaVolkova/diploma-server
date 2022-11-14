@@ -6,13 +6,14 @@ const getCommentsByArticleId = async (req, res, next) => {
   try {
     const data = await Comment.find({
       articleId: articleId,
+      isPublished: true,
     }).populate([
       {
         path: "authorId",
         model: "User",
       },
     ]);
-    res.status(200).send(data);
+    res.status(200).send({ data });
   } catch (err) {
     return res.status(500).send(err.message);
   }
