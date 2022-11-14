@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const getCommentsByArticleId = async (req, res, next) => {
   const articleId = mongoose.Types.ObjectId(req.params.articleId);
   try {
-    const comments = await Comment.find({
+    const data = await Comment.find({
       articleId: articleId,
     }).populate([
       {
@@ -12,7 +12,7 @@ const getCommentsByArticleId = async (req, res, next) => {
         model: "User",
       },
     ]);
-    res.status(200).send(comments);
+    res.status(200).send(data);
   } catch (err) {
     return res.status(500).send(err.message);
   }

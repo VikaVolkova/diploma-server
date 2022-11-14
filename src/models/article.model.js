@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const { Category } = require("./category.model");
 const { User } = require("./user.model");
-const { Comment } = require("./comment.model");
 
 const articleSchema = new mongoose.Schema({
   title: {
@@ -49,7 +49,7 @@ const articleSchema = new mongoose.Schema({
     required: true,
     maxlength: 30,
   },
-  comments: [{ type: String, ref: Comment }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const Article = mongoose.model("Article", articleSchema);

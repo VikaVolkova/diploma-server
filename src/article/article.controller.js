@@ -6,7 +6,7 @@ const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
   const skip = Number(req.query.skip) || 0;
   try {
-    const articles = await Article.find({ isPublished: true })
+    const data = await Article.find({ isPublished: true })
       .populate([
         {
           path: "category",
@@ -22,12 +22,12 @@ const getArticles = async (req, res, next) => {
         },
       ])
       .sort({ date: -1 })
-      .limit({ limit })
-      .skip({ skip });
+      .limit(limit)
+      .skip(skip);
 
     const count = await Article.find({ isPublished: true }).count();
     return res.status(200).json({
-      articles,
+      data,
       limit,
       skip,
       count,
@@ -60,8 +60,9 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
   try {
     const category = await Category.findOne({ url: categoryUrl });
     const categoryId = category._id;
-    const articles = await Article.find({
+    const data = await Article.find({
       category: categoryId,
+      isPublished: true,
     })
       .populate([
         {
@@ -82,7 +83,7 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
       .skip(skip);
     const count = await Article.find({ category: categoryId }).count();
     return res.status(200).json({
-      articles,
+      data,
       limit,
       skip,
       count,
