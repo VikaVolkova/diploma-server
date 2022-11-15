@@ -20,6 +20,38 @@ const makeAccessToken = (user) => {
   }));
 };
 
+const makeRefreshToken = (payload) => {
+  const refreshTokenLife = "10d";
+
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_KEY, {
+    expiresIn: refreshTokenLife,
+  });
+};
+
+const getAccessTokenByRefreshToken = async (req, res, next) => {
+  try {
+    const { refresh_token } = req.cookies;
+
+    if (!refresh_token) {
+      return next(new Exception(404, "Token does not exist"));
+    }
+
+    const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY);
+
+    const payload = {
+      user_id: decoded.user_id,
+      user_role: decoded.user_role,
+      email: decoded.email,
+    };
+
+    const accessToken = makeAccessToken(payload);
+
+    res.status(200).json({ accessToken });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const register = async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -41,9 +73,8 @@ const register = async (req, res, next) => {
     user.password = await bcrypt.hash(user.password, salt);
 
     await user.save();
-    const token = makeAccessToken(user);
 
-    res.send(token);
+    res.status(201).send();
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -57,17 +88,43 @@ const login = async (req, res, next) => {
 
   try {
     let user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res
         .status(400)
         .send("User with the provided email does not exist");
+    }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(400).send("Invalid password");
+    if (await bcrypt.compare(password, user.password)) {
+      const payload = makeTokenPayload(user);
+      const accessToken = makeAccessToken(payload);
+      const refreshToken = makeRefreshToken(payload);
 
-    const token = makeAccessToken(user);
+      res.cookie("refresh_token", refreshToken, {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
+        maxAge: 1000 * 60 * 60 * 24 * 10,
+        httpOnly: true,
+      });
 
-    res.send(token);
+      return res.status(200).json({ user, accessToken });
+    }
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+const getMe = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(404).send("User not found");
+    }
+
+    const user = await User.findOne({ _id: req.user._id });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    return res.status(200).json({ user });
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -76,4 +133,6 @@ const login = async (req, res, next) => {
 module.exports = {
   register: register,
   login: login,
+  getMe: getMe,
+  getAccessTokenByRefreshToken: getAccessTokenByRefreshToken,
 };
