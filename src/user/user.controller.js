@@ -33,7 +33,7 @@ const getAccessTokenByRefreshToken = async (req, res, next) => {
     const { refresh_token } = req.cookies;
 
     if (!refresh_token) {
-      return next(new Exception(404, "Token does not exist"));
+      return res.status(404).send("Token does not exist");
     }
 
     const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY);
@@ -99,14 +99,31 @@ const login = async (req, res, next) => {
       const accessToken = makeAccessToken(payload);
       const refreshToken = makeRefreshToken(payload);
 
-      res.cookie("refresh_token", refreshToken, {
+      let options = {
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
         maxAge: 1000 * 60 * 60 * 24 * 10,
+        secure: true,
         httpOnly: true,
-      });
+      };
+
+      res.cookie("refresh_token", refreshToken, options);
 
       return res.status(200).json({ user, accessToken });
     }
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+const logout = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(400).send("User not found");
+    }
+
+    res.clearCookie("refresh_token");
+
+    return res.status(200).send();
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -135,4 +152,5 @@ module.exports = {
   login: login,
   getMe: getMe,
   getAccessTokenByRefreshToken: getAccessTokenByRefreshToken,
+  logout: logout,
 };

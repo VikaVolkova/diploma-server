@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const articleRoutes = require("./article/article.routes");
 const categoryRoutes = require("./category/category.routes");
 const userRoutes = require("./user/user.routes");
@@ -10,7 +11,13 @@ const app = express();
 
 require("dotenv").config();
 
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/news", articleRoutes);

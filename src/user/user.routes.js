@@ -9,6 +9,8 @@ userRoutes.post("/register", controller.register);
 
 userRoutes.post("/login", controller.login);
 
+userRoutes.get("/logout", auth, controller.logout);
+
 userRoutes.get("/me", auth, controller.getMe);
 
 userRoutes.get(
