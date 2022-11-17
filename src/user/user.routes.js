@@ -9,6 +9,10 @@ userRoutes.post("/register", controller.register);
 
 userRoutes.post("/login", controller.login);
 
+userRoutes.post("/forgot-password", controller.forgotPassword);
+
+userRoutes.post("/restore-password", auth, controller.restorePassword);
+
 userRoutes.get("/logout", auth, controller.logout);
 
 userRoutes.get("/me", auth, controller.getMe);
