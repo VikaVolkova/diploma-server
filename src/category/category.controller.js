@@ -13,7 +13,7 @@ const createCategory = async (req, res, next) => {
   let category = new Category({ ...req.body });
   const user = req.user;
   try {
-    if (user.role != "Admin" && user.role != "Manager") {
+    if (user.role != "ADMIN" && user.role != "MANAGER") {
       return res.status(401).send("Access denied");
     }
     category = await category.save();

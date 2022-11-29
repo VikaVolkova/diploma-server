@@ -38,15 +38,15 @@ const getArticles = async (req, res, next) => {
 };
 
 const getArticleByUrl = async (req, res, next) => {
-  const url = req.params.url;
+  const { newsUrl } = req.params;
   try {
-    const article = await Article.findOne({ url: url });
+    const article = await Article.findOne({ url: newsUrl });
 
     if (!article || !article.isPublished) {
       throw new Error("Article is not found");
     }
 
-    return res.status(200).json(article);
+    return res.status(200).json({ article });
   } catch (err) {
     return next(err);
   }
@@ -114,7 +114,7 @@ const publishArticle = async (req, res, next) => {
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
-    if (user.role != "Admin") return res.status(401).send("Access denied");
+    if (user.role != "ADMIN") return res.status(401).send("Access denied");
     const publishedArticle = await Article.findByIdAndUpdate(id, {
       isPublished: true,
     });
@@ -130,7 +130,7 @@ const deleteArticle = async (req, res, next) => {
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
-    if (user.role != "Admin") return res.status(401).send("Access denied");
+    if (user.role != "ADMIN") return res.status(401).send("Access denied");
     const deletedArticle = await Article.findByIdAndDelete(id);
     res.status(200).send(deletedArticle);
   } catch (err) {
