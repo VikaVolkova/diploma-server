@@ -6,7 +6,7 @@ const articleRoutes = express.Router();
 
 articleRoutes.get("/", controller.getArticles);
 
-articleRoutes.get("/:url", controller.getArticleByUrl);
+articleRoutes.get("/:newsUrl", controller.getArticleByUrl);
 
 articleRoutes.get(
   "/category/:categoryUrl",

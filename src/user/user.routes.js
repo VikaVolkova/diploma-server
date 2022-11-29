@@ -15,7 +15,7 @@ userRoutes.post("/restore-password", auth, controller.restorePassword);
 
 userRoutes.get("/logout", auth, controller.logout);
 
-userRoutes.get("/me", auth, controller.getMe);
+userRoutes.get("/me", auth, controller.getUser);
 
 userRoutes.get(
   "/token",

@@ -112,6 +112,8 @@ const login = async (req, res, next) => {
       res.cookie("refresh_token", refreshToken, options);
 
       return res.status(200).json({ user, accessToken });
+    } else {
+      return res.status(404).send();
     }
   } catch (err) {
     return res.status(500).send(err.message);
@@ -137,8 +139,8 @@ const forgotPassword = async (req, res, next) => {
 
     sendEmail(
       user.email,
-      "LearnMe Reset Password",
-      `Reset your password here: ${url}`
+      "LearnMe відновлення паролю",
+      `Відновіть Ваш пароль за посиланням: ${url}`
     );
     return res.status(200).send("Link has been sent");
   } catch (err) {
@@ -191,7 +193,7 @@ const logout = async (req, res, next) => {
   }
 };
 
-const getMe = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(404).send("User not found");
@@ -214,7 +216,7 @@ module.exports = {
   login: login,
   forgotPassword: forgotPassword,
   restorePassword: restorePassword,
-  getMe: getMe,
+  getUser: getUser,
   getAccessTokenByRefreshToken: getAccessTokenByRefreshToken,
   logout: logout,
 };
