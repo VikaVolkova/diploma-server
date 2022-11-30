@@ -19,6 +19,21 @@ const getCommentsByArticleId = async (req, res, next) => {
   }
 };
 
+const createComment = async (req, res, next) => {
+  let comment = new Comment({
+    ...req.body,
+    isPublished: false,
+  });
+
+  try {
+    comment = await comment.save();
+    res.status(201).send(comment);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
 module.exports = {
   getCommentsByArticleId: getCommentsByArticleId,
+  createComment: createComment,
 };

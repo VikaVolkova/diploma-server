@@ -5,4 +5,6 @@ const commentRoutes = express.Router();
 
 commentRoutes.get("/article/:articleId", controller.getCommentsByArticleId);
 
+commentRoutes.post("/", auth, controller.createComment);
+
 module.exports = commentRoutes;
