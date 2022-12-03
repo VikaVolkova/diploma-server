@@ -6,6 +6,8 @@ const articleRoutes = require("./article/article.routes");
 const categoryRoutes = require("./category/category.routes");
 const userRoutes = require("./user/user.routes");
 const commentRoutes = require("./comment/comment.routes");
+const imagesRoutes = require("./images/images.routes");
+const path = require("path");
 
 const app = express();
 
@@ -19,11 +21,13 @@ app.use(
   })
 );
 app.use(express.json());
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/news", articleRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/images", imagesRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to api");

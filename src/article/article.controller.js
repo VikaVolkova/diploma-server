@@ -96,6 +96,7 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
 const createArticle = async (req, res, next) => {
   let article = new Article({
     ...req.body,
+    // category: mongoose.Types.ObjectId(req.body.category),
     isPublished: false,
     date: new Date(),
   });

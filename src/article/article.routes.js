@@ -13,7 +13,7 @@ articleRoutes.get(
   controller.getArticlesByCategoryUrl
 );
 
-articleRoutes.post("/", auth, controller.createArticle);
+articleRoutes.post("/", controller.createArticle);
 
 articleRoutes.post("/publish/:id", auth, controller.publishArticle);
 
