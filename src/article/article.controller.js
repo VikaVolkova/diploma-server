@@ -42,7 +42,7 @@ const getArticleByUrl = async (req, res, next) => {
   try {
     const article = await Article.findOne({ url: newsUrl });
 
-    if (!article || !article.isPublished) {
+    if (!article) {
       throw new Error("Article is not found");
     }
 
@@ -94,10 +94,17 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
 };
 
 const getUnpublishedArticles = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
+  const limit = getParcedLimit(Number(req.query.limit), 10, 10);
   const skip = Number(req.query.skip) || 0;
+  const user = req.user;
+
+  const query =
+    user.role === "ADMIN"
+      ? { isPublished: false }
+      : { isPublished: false, author: user._id };
+
   try {
-    const data = await Article.find({ isPublished: false })
+    const data = await Article.find(query)
       .populate([
         {
           path: "category",
@@ -116,7 +123,7 @@ const getUnpublishedArticles = async (req, res, next) => {
       .limit(limit)
       .skip(skip);
 
-    const count = await Article.find({ isPublished: false }).count();
+    const count = await Article.find(query).count();
     return res.status(200).json({
       data,
       limit,
