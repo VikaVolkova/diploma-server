@@ -16,17 +16,14 @@ const articleSchema = new mongoose.Schema({
     minlength: 30,
     maxlength: 100,
   },
-  coverPicture: {
-    type: String,
-  },
-  picture: {
+  coverImage: {
     type: String,
   },
   content: {
     type: String,
     required: true,
     minlength: 100,
-    maxlength: 1000,
+    maxlength: 10000,
   },
   category: {
     type: String,
