@@ -6,6 +6,8 @@ const articleRoutes = express.Router();
 
 articleRoutes.get("/", controller.getArticles);
 
+articleRoutes.get("/unpublished", auth, controller.getUnpublishedArticles);
+
 articleRoutes.get("/:newsUrl", controller.getArticleByUrl);
 
 articleRoutes.get(
@@ -13,7 +15,7 @@ articleRoutes.get(
   controller.getArticlesByCategoryUrl
 );
 
-articleRoutes.post("/", controller.createArticle);
+articleRoutes.post("/", auth, controller.createArticle);
 
 articleRoutes.post("/publish/:id", auth, controller.publishArticle);
 

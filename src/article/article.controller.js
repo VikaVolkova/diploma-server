@@ -93,10 +93,44 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
   }
 };
 
+const getUnpublishedArticles = async (req, res, next) => {
+  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
+  const skip = Number(req.query.skip) || 0;
+  try {
+    const data = await Article.find({ isPublished: false })
+      .populate([
+        {
+          path: "category",
+          model: "Category",
+        },
+        {
+          path: "author",
+          model: "User",
+        },
+        {
+          path: "comments",
+          model: "Comment",
+        },
+      ])
+      .sort({ date: -1 })
+      .limit(limit)
+      .skip(skip);
+
+    const count = await Article.find({ isPublished: false }).count();
+    return res.status(200).json({
+      data,
+      limit,
+      skip,
+      count,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const createArticle = async (req, res, next) => {
   let article = new Article({
     ...req.body,
-    // category: mongoose.Types.ObjectId(req.body.category),
     isPublished: false,
     date: new Date(),
   });
@@ -143,6 +177,7 @@ module.exports = {
   getArticles: getArticles,
   getArticleByUrl: getArticleByUrl,
   getArticlesByCategoryUrl: getArticlesByCategoryUrl,
+  getUnpublishedArticles: getUnpublishedArticles,
   createArticle: createArticle,
   publishArticle: publishArticle,
   deleteArticle: deleteArticle,
