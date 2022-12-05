@@ -152,13 +152,14 @@ const createArticle = async (req, res, next) => {
 
 const publishArticle = async (req, res, next) => {
   const id = req.params.id;
+  const isPublished = req.query.isPublished;
   const user = req.user;
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
     if (user.role != "ADMIN") return res.status(401).send("Access denied");
     const publishedArticle = await Article.findByIdAndUpdate(id, {
-      isPublished: true,
+      isPublished,
     });
     res.status(200).send(publishedArticle);
   } catch (err) {
@@ -172,7 +173,8 @@ const deleteArticle = async (req, res, next) => {
   try {
     const article = await Article.findById(id);
     if (!article) return res.status(404).send("Article is not found");
-    if (user.role != "ADMIN") return res.status(401).send("Access denied");
+    if (user.role != "ADMIN" && user.role != "MANAGER")
+      return res.status(401).send("Access denied");
     const deletedArticle = await Article.findByIdAndDelete(id);
     res.status(200).send(deletedArticle);
   } catch (err) {
