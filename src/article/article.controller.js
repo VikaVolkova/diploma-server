@@ -1,31 +1,14 @@
-const { Article } = require("../models/article.model");
-const { Category } = require("../models/category.model");
-const { getParcedLimit } = require("../common/getLimit");
+import { getParcedLimit } from "../utils/getLimit.js";
+import { RESPONSE } from "../helpers/response.js";
+import { ROLES } from "../helpers/roles.js";
+import * as service from "./article.service.js";
 
-const getArticles = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
+export const getArticles = async (req, res, next) => {
+  const limit = getParcedLimit(Number(req.query.limit), 10, 10);
   const skip = Number(req.query.skip) || 0;
+  const query = { isPublished: true };
   try {
-    const data = await Article.find({ isPublished: true })
-      .populate([
-        {
-          path: "category",
-          model: "Category",
-        },
-        {
-          path: "author",
-          model: "User",
-        },
-        {
-          path: "comments",
-          model: "Comment",
-        },
-      ])
-      .sort({ date: -1 })
-      .limit(limit)
-      .skip(skip);
-
-    const count = await Article.find({ isPublished: true }).count();
+    const { data, count } = await service.getArticles(query, limit, skip);
     return res.status(200).json({
       data,
       limit,
@@ -37,13 +20,13 @@ const getArticles = async (req, res, next) => {
   }
 };
 
-const getArticleByUrl = async (req, res, next) => {
-  const { newsUrl } = req.params;
+export const getArticleByUrl = async (req, res, next) => {
+  const url = req.params.newsUrl;
   try {
-    const article = await Article.findOne({ url: newsUrl });
+    const article = await service.getArticle({ url });
 
     if (!article) {
-      throw new Error("Article is not found");
+      res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
     }
 
     return res.status(200).json({ article });
@@ -52,36 +35,17 @@ const getArticleByUrl = async (req, res, next) => {
   }
 };
 
-const getArticlesByCategoryUrl = async (req, res, next) => {
+export const getArticlesByCategoryUrl = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
   const skip = Number(req.query.skip) || 0;
   const categoryUrl = req.params.categoryUrl;
 
   try {
-    const category = await Category.findOne({ url: categoryUrl });
-    const categoryId = category._id;
-    const data = await Article.find({
-      category: categoryId,
-      isPublished: true,
-    })
-      .populate([
-        {
-          path: "category",
-          model: "Category",
-        },
-        {
-          path: "author",
-          model: "User",
-        },
-        {
-          path: "comments",
-          model: "Comment",
-        },
-      ])
-      .sort({ date: -1 })
-      .limit(limit)
-      .skip(skip);
-    const count = await Article.find({ category: categoryId }).count();
+    const { data, count } = await service.getArticlesByCategoryUrl(
+      skip,
+      limit,
+      categoryUrl
+    );
     return res.status(200).json({
       data,
       limit,
@@ -93,37 +57,18 @@ const getArticlesByCategoryUrl = async (req, res, next) => {
   }
 };
 
-const getUnpublishedArticles = async (req, res, next) => {
+export const getUnpublishedArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 10, 10);
   const skip = Number(req.query.skip) || 0;
   const user = req.user;
 
   const query =
-    user.role === "ADMIN"
+    user.role === ROLES.ADMIN
       ? { isPublished: false }
       : { isPublished: false, author: user._id };
 
   try {
-    const data = await Article.find(query)
-      .populate([
-        {
-          path: "category",
-          model: "Category",
-        },
-        {
-          path: "author",
-          model: "User",
-        },
-        {
-          path: "comments",
-          model: "Comment",
-        },
-      ])
-      .sort({ date: -1 })
-      .limit(limit)
-      .skip(skip);
-
-    const count = await Article.find(query).count();
+    const { data, count } = await service.getArticles(query, limit, skip);
     return res.status(200).json({
       data,
       limit,
@@ -135,59 +80,42 @@ const getUnpublishedArticles = async (req, res, next) => {
   }
 };
 
-const createArticle = async (req, res, next) => {
-  let article = new Article({
-    ...req.body,
-    isPublished: false,
-    date: new Date(),
-  });
-
+export const createArticle = async (req, res, next) => {
   try {
-    article = await article.save();
+    const article = await service.createArticle(req.body);
     res.status(201).send(article);
   } catch (err) {
     res.status(500).send(err.message);
   }
 };
 
-const publishArticle = async (req, res, next) => {
-  const id = req.params.id;
+export const publishArticle = async (req, res, next) => {
+  const _id = req.params.id;
   const isPublished = req.query.isPublished;
   const user = req.user;
   try {
-    const article = await Article.findById(id);
-    if (!article) return res.status(404).send("Article is not found");
-    if (user.role != "ADMIN") return res.status(401).send("Access denied");
-    const publishedArticle = await Article.findByIdAndUpdate(id, {
-      isPublished,
-    });
+    const article = await service.getArticle({ _id });
+    if (!article) return res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
+    if (user.role != ROLES.ADMIN)
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+    const publishedArticle = await service.togglePublish(_id, isPublished);
     res.status(200).send(publishedArticle);
   } catch (err) {
     res.status(500).send(err.message);
   }
 };
 
-const deleteArticle = async (req, res, next) => {
-  const id = req.params.id;
+export const deleteArticle = async (req, res, next) => {
+  const _id = req.params.id;
   const user = req.user;
   try {
-    const article = await Article.findById(id);
-    if (!article) return res.status(404).send("Article is not found");
-    if (user.role != "ADMIN" && user.role != "MANAGER")
-      return res.status(401).send("Access denied");
-    const deletedArticle = await Article.findByIdAndDelete(id);
+    const article = await service.getArticle({ _id });
+    if (!article) return res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
+    if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER)
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+    const deletedArticle = await service.deleteArticle(_id);
     res.status(200).send(deletedArticle);
   } catch (err) {
     res.status(500).send(err.message);
   }
-};
-
-module.exports = {
-  getArticles: getArticles,
-  getArticleByUrl: getArticleByUrl,
-  getArticlesByCategoryUrl: getArticlesByCategoryUrl,
-  getUnpublishedArticles: getUnpublishedArticles,
-  createArticle: createArticle,
-  publishArticle: publishArticle,
-  deleteArticle: deleteArticle,
 };

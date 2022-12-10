@@ -1,39 +1,21 @@
-const { Comment } = require("../models/comment.model");
-const mongoose = require("mongoose");
+import { Types } from "mongoose";
+import * as service from "./comment.service.js";
 
-const getCommentsByArticleId = async (req, res, next) => {
-  const articleId = mongoose.Types.ObjectId(req.params.articleId);
+export const getCommentsByArticleId = async (req, res, next) => {
+  const articleId = Types.ObjectId(req.params.articleId);
   try {
-    const data = await Comment.find({
-      articleId: articleId,
-      isPublished: true,
-    }).populate([
-      {
-        path: "authorId",
-        model: "User",
-      },
-    ]);
+    const data = await service.getCommentsByArticleId(articleId);
     res.status(200).send({ data });
   } catch (err) {
     return res.status(500).send(err.message);
   }
 };
 
-const createComment = async (req, res, next) => {
-  let comment = new Comment({
-    ...req.body,
-    isPublished: false,
-  });
-
+export const createComment = async (req, res, next) => {
   try {
-    comment = await comment.save();
+    const comment = await service.createComment({ ...req.body });
     res.status(201).send(comment);
   } catch (err) {
     res.status(500).send(err.message);
   }
-};
-
-module.exports = {
-  getCommentsByArticleId: getCommentsByArticleId,
-  createComment: createComment,
 };

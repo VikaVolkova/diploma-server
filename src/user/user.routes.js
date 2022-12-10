@@ -1,26 +1,34 @@
-const express = require("express");
-const controller = require("./user.controller");
-const auth = require("../middleware/auth");
-const { check } = require("express-validator");
+import { Router } from "express";
+import {
+  register,
+  login,
+  forgotPassword,
+  restorePassword,
+  logout,
+  getUser,
+  getAccessTokenByRefreshToken,
+} from "./user.controller.js";
+import { auth } from "../middleware/auth.js";
+import { check } from "express-validator";
+import { REFRESH_TOKEN } from "./user.controller.js";
+import { ROUTES } from "../helpers/routes.js";
 
-const userRoutes = express.Router();
+export const userRoutes = Router();
 
-userRoutes.post("/register", controller.register);
+userRoutes.post(ROUTES.USER.REGISTER, register);
 
-userRoutes.post("/login", controller.login);
+userRoutes.post(ROUTES.USER.LOGIN, login);
 
-userRoutes.post("/forgot-password", controller.forgotPassword);
+userRoutes.post(ROUTES.USER.FORGOT_PASSWORD, forgotPassword);
 
-userRoutes.post("/restore-password", auth, controller.restorePassword);
+userRoutes.post(ROUTES.USER.RESTORE_PASSWORD, auth, restorePassword);
 
-userRoutes.get("/logout", auth, controller.logout);
+userRoutes.get(ROUTES.USER.LOGOUT, auth, logout);
 
-userRoutes.get("/me", auth, controller.getUser);
+userRoutes.get(ROUTES.USER.GET_USER, auth, getUser);
 
 userRoutes.get(
-  "/token",
-  check("refresh_token").exists(),
-  controller.getAccessTokenByRefreshToken
+  ROUTES.USER.GET_ACCESS_TOKEN_BY_REFRESH_TOKEN,
+  check(REFRESH_TOKEN).exists(),
+  getAccessTokenByRefreshToken
 );
-
-module.exports = userRoutes;

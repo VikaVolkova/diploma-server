@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import { Schema, model } from "mongoose";
 
-const commentSchema = new mongoose.Schema({
+const commentSchema = new Schema({
   text: {
     type: String,
     required: true,
@@ -21,6 +20,4 @@ const commentSchema = new mongoose.Schema({
   },
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
-
-exports.Comment = Comment;
+export const Comment = model("Comment", commentSchema);

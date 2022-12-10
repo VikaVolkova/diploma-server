@@ -1,10 +1,13 @@
-const express = require("express");
-const controller = require("./comment.controller");
-const auth = require("../middleware/auth");
-const commentRoutes = express.Router();
+import { Router } from "express";
+import { getCommentsByArticleId, createComment } from "./comment.controller.js";
+import { auth } from "../middleware/auth.js";
+import { ROUTES } from "../helpers/routes.js";
 
-commentRoutes.get("/article/:articleId", controller.getCommentsByArticleId);
+export const commentRoutes = Router();
 
-commentRoutes.post("/", auth, controller.createComment);
+commentRoutes.get(
+  ROUTES.COMMENT.GET_COMMENTS_BY_ARTICLE_ID,
+  getCommentsByArticleId
+);
 
-module.exports = commentRoutes;
+commentRoutes.post(ROUTES.BASE, auth, createComment);

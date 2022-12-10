@@ -1,8 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const categorySchema = Joi.object({
+export const categorySchema = Joi.object({
   category: Joi.string().min(2).max(20).required(),
   url: Joi.string().min(2).max(20).required(),
 });
-
-exports.categorySchema = categorySchema;

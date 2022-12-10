@@ -1,28 +1,22 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import { HEADERS_TOKEN_NAME } from "../helpers/constants.js";
+import { RESPONSE } from "../helpers/response.js";
+import { ROLES } from "../helpers/roles.js";
 
-const roles = {
-  user: "USER",
-  manager: "MANAGER",
-  admin: "ADMIN",
-};
-
-const auth = (req, res, next) => {
+export const auth = (req, res, next) => {
   const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
-  if (!token)
-    return res.status(403).send("A token is required for authentication");
+    req.body.token || req.query.token || req.headers[HEADERS_TOKEN_NAME];
+  if (!token) return res.status(403).send(RESPONSE.TOKEN_REQUIRED);
 
   try {
     const payload = jwt.verify(token, process.env.ACCESS_KEY);
-    if (roles.length && !roles.includes(decoded.user_role)) {
-      return res.status(403).send("No permissions");
+    if (ROLES.length && !ROLES.includes(decoded.user_role)) {
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
     }
 
     req.user = payload;
     next();
   } catch (err) {
-    res.status(400).send("Invalid token");
+    res.status(400).send(RESPONSE.INVALID_TOKEN);
   }
 };
-
-module.exports = auth;

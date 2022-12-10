@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const articleSchema = Joi.object({
+export const articleSchema = Joi.object({
   title: Joi.string().min(3).max(50).required(),
   spoiler: Joi.string().min(30).max(100).required(),
   coverImage: Joi.string(),
@@ -12,5 +12,3 @@ const articleSchema = Joi.object({
   url: Joi.string().max(30).required(),
   comments: Joi.array(),
 });
-
-exports.articleSchema = articleSchema;

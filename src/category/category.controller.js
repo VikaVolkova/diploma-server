@@ -1,29 +1,25 @@
-const { Category } = require("../models/category.model");
+import { ROLES } from "../helpers/roles.js";
+import { RESPONSE } from "../helpers/response.js";
+import * as service from "./category.service.js";
 
-const getCategories = async (req, res, next) => {
+export const getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find().sort({ date: 1 });
+    const categories = await service.getCategories();
     return res.status(200).json(categories);
   } catch (err) {
     return next(err);
   }
 };
 
-const createCategory = async (req, res, next) => {
-  let category = new Category({ ...req.body });
+export const createCategory = async (req, res, next) => {
   const user = req.user;
   try {
-    if (user.role != "ADMIN" && user.role != "MANAGER") {
-      return res.status(401).send("Access denied");
+    if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER) {
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
     }
-    category = await category.save();
+    const category = await service.createCategory({ ...req.body });
     res.status(201).send(category);
   } catch (err) {
     return next(err);
   }
-};
-
-module.exports = {
-  getCategories: getCategories,
-  createCategory: createCategory,
 };
