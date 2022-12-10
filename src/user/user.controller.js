@@ -69,7 +69,7 @@ export const register = async (req, res, next) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const user = await service.findUser({ email });
+    const user = await service.findUser(email);
     if (user) return res.status(400).send(RESPONSE.USER.EMAIL_EXISTS);
     await service.register({ name, email, password });
 
