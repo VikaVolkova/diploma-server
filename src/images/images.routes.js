@@ -1,16 +1,15 @@
-const express = require("express");
-const { storage } = require("../storage/storage");
-const multer = require("multer");
+import { Router } from "express";
+import { storage } from "../storage/storage.js";
+import multer from "multer";
 const upload = multer({ storage });
+import { ROUTES } from "../helpers/routes.js";
 
-const imagesRoutes = express.Router();
+export const imagesRoutes = Router();
 
-imagesRoutes.post("/upload", upload.single("image"), (req, res) => {
+imagesRoutes.post(ROUTES.IMAGES.UPLOAD, upload.single("image"), (req, res) => {
   if (req.file) {
     return res.status(200).send(req.file.path);
   } else {
-    return res.status(500).send("No file");
+    return res.status(500);
   }
 });
-
-module.exports = imagesRoutes;

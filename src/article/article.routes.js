@@ -1,24 +1,35 @@
-const express = require("express");
-const controller = require("./article.controller");
-const auth = require("../middleware/auth");
+import { Router } from "express";
+import {
+  getArticles,
+  getUnpublishedArticles,
+  getArticleByUrl,
+  getArticlesByCategoryUrl,
+  createArticle,
+  publishArticle,
+  deleteArticle,
+} from "./article.controller.js";
+import { auth } from "../middleware/auth.js";
+import { ROUTES } from "../helpers/routes.js";
 
-const articleRoutes = express.Router();
+export const articleRoutes = Router();
 
-articleRoutes.get("/", controller.getArticles);
-
-articleRoutes.get("/unpublished", auth, controller.getUnpublishedArticles);
-
-articleRoutes.get("/:newsUrl", controller.getArticleByUrl);
+articleRoutes.get(ROUTES.BASE, getArticles);
 
 articleRoutes.get(
-  "/category/:categoryUrl",
-  controller.getArticlesByCategoryUrl
+  ROUTES.ARTICLE.GET_UNPUBLISHED_ARTICLES,
+  auth,
+  getUnpublishedArticles
 );
 
-articleRoutes.post("/", auth, controller.createArticle);
+articleRoutes.get(ROUTES.ARTICLE.GET_ARTICLE_BY_URL, getArticleByUrl);
 
-articleRoutes.post("/publish/:id", auth, controller.publishArticle);
+articleRoutes.get(
+  ROUTES.ARTICLE.GET_ARTICLES_BY_CATEGORY_URL,
+  getArticlesByCategoryUrl
+);
 
-articleRoutes.delete("/:id", auth, controller.deleteArticle);
+articleRoutes.post(ROUTES.BASE, auth, createArticle);
 
-module.exports = articleRoutes;
+articleRoutes.post(ROUTES.ARTICLE.PUBLISH_ARTICLE, auth, publishArticle);
+
+articleRoutes.delete(ROUTES.ARTICLE.DELETE_ARTICLE, auth, deleteArticle);

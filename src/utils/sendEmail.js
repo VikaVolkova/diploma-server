@@ -1,10 +1,13 @@
-const nodemailer = require("nodemailer");
+import { createTransport } from "nodemailer";
+import * as dotenv from "dotenv";
 
-const sendEmail = async (email, subject, text) => {
+dotenv.config();
+
+export const sendEmail = async (email, url) => {
   try {
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       host: process.env.HOST,
-      service: "gmail",
+      service: process.env.MAIL_SERVICE,
       port: 465,
       secure: true,
       auth: {
@@ -16,8 +19,8 @@ const sendEmail = async (email, subject, text) => {
     await transporter.sendMail({
       from: process.env.USER,
       to: email,
-      subject: subject,
-      text: text,
+      subject: process.env.MAIL_SUBJECT,
+      text: `${process.env.MAIL_TEXT} ${url}`,
     });
 
     console.log("email sent sucessfully");
@@ -25,5 +28,3 @@ const sendEmail = async (email, subject, text) => {
     console.log(error, "email not sent");
   }
 };
-
-module.exports = sendEmail;

@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const { Category } = require("./category.model");
-const { User } = require("./user.model");
+import { Schema, model } from "mongoose";
+import { Category } from "./category.model.js";
+import { User } from "./user.model.js";
 
-const articleSchema = new mongoose.Schema({
+const articleSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -49,6 +48,4 @@ const articleSchema = new mongoose.Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
-const Article = mongoose.model("Article", articleSchema);
-
-exports.Article = Article;
+export const Article = model("Article", articleSchema);

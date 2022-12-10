@@ -1,10 +1,9 @@
-const express = require("express");
-const controller = require("./category.controller");
-const auth = require("../middleware/auth");
+import { Router } from "express";
+import { getCategories, createCategory } from "./category.controller.js";
+import { auth } from "../middleware/auth.js";
+import { ROUTES } from "../helpers/routes.js";
 
-const categoryRoutes = express.Router();
+export const categoryRoutes = Router();
 
-categoryRoutes.get("/", controller.getCategories);
-categoryRoutes.post("/", auth, controller.createCategory);
-
-module.exports = categoryRoutes;
+categoryRoutes.get(ROUTES.BASE, getCategories);
+categoryRoutes.post(ROUTES.BASE, auth, createCategory);
