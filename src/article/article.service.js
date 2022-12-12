@@ -63,5 +63,5 @@ export const togglePublish = async (id, isPublished) => {
 
 export const deleteArticle = async (id) => {
   const deletedArticle = await Article.findByIdAndDelete(id);
-  return deleteArticle;
+  return deletedArticle;
 };
