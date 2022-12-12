@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { getCommentsByArticleId, createComment } from "./comment.controller.js";
+import {
+  getCommentsByArticleId,
+  createComment,
+  getUnpublishedComments,
+} from "./comment.controller.js";
 import { auth } from "../middleware/auth.js";
 import { ROUTES } from "../helpers/routes.js";
 
@@ -11,3 +15,9 @@ commentRoutes.get(
 );
 
 commentRoutes.post(ROUTES.BASE, auth, createComment);
+
+commentRoutes.get(
+  ROUTES.COMMENT.GET_UNPUBLISHED_COMMENTS,
+  auth,
+  getUnpublishedComments
+);

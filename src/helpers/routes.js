@@ -24,6 +24,7 @@ export const ROUTES = {
   },
   COMMENT: {
     GET_COMMENTS_BY_ARTICLE_ID: "/article/:articleId",
+    GET_UNPUBLISHED_COMMENTS: "/unpublished",
   },
   IMAGES: {
     UPLOAD: "/upload",
