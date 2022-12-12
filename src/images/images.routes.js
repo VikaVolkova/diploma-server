@@ -10,6 +10,6 @@ imagesRoutes.post(ROUTES.IMAGES.UPLOAD, upload.single("image"), (req, res) => {
   if (req.file) {
     return res.status(200).send(req.file.path);
   } else {
-    return res.status(500);
+    return res.status(200).send("");
   }
 });
