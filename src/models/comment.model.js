@@ -18,6 +18,10 @@ const commentSchema = new Schema({
     ref: "Article",
     required: true,
   },
+  date: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 export const Comment = model("Comment", commentSchema);
