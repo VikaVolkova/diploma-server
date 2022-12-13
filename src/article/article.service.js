@@ -4,18 +4,9 @@ import { Category } from "../models/category.model.js";
 export const getArticles = async (query, limit, skip) => {
   const data = await Article.find(query)
     .populate([
-      {
-        path: "category",
-        model: "Category",
-      },
-      {
-        path: "author",
-        model: "User",
-      },
-      {
-        path: "comments",
-        model: "Comment",
-      },
+      "category",
+      "author",
+      { path: "comments", match: { isPublished: true } },
     ])
     .sort({ date: -1 })
     .limit(limit)

@@ -1,11 +1,13 @@
 import { Types } from "mongoose";
+import { RESPONSE } from "../helpers/response.js";
+import { ROLES } from "../helpers/roles.js";
 import { getParcedLimit } from "../utils/getLimit.js";
 import * as service from "./comment.service.js";
 
 export const getCommentsByArticleId = async (req, res, next) => {
-  const articleId = Types.ObjectId(req.params.articleId);
+  const article = Types.ObjectId(req.params.article);
   try {
-    const data = await service.getCommentsByArticleId(articleId);
+    const data = await service.getCommentsByArticleId(article);
     res.status(200).send({ data });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -29,5 +31,35 @@ export const getUnpublishedComments = async (req, res, next) => {
     res.status(200).json({ data, count, limit, skip });
   } catch (err) {
     return res.status(500).send(err.message);
+  }
+};
+
+export const publishComment = async (req, res, next) => {
+  const _id = req.params.id;
+  const user = req.user;
+  try {
+    const comment = await service.getComment({ _id });
+    if (!comment) return res.status(404).send(RESPONSE.NOT_FOUND);
+    if (user.role != ROLES.ADMIN)
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+    const publishedComment = await service.publishComment({ _id });
+    res.status(200).send(publishedComment);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
+export const deleteComment = async (req, res, next) => {
+  const _id = req.params.id;
+  const user = req.user;
+  try {
+    const comment = await service.getComment({ _id });
+    if (!comment) return res.status(404).send(RESPONSE.NOT_FOUND);
+    if (user.role != ROLES.ADMIN && user._id != comment.author._id)
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+    const deletedComment = await service.deleteArticle(_id);
+    res.status(200).send(deletedComment);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 };
