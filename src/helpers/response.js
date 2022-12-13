@@ -3,9 +3,7 @@ export const RESPONSE = {
   ACCESS_DENIED: "Access denied",
   TOKEN_REQUIRED: "A token is required for authentication",
   INVALID_TOKEN: "Invalid token",
-  ARTICLE: {
-    NOT_FOUND: "Article is not found",
-  },
+  NOT_FOUND: "Item is not found",
   USER: {
     NO_TOKEN: "Token does not exist",
     NOT_FOUND: "User is not found",

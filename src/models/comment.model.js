@@ -8,12 +8,12 @@ const commentSchema = new Schema({
   isPublished: {
     type: Boolean,
   },
-  authorId: {
+  author: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  articleId: {
+  article: {
     type: Schema.Types.ObjectId,
     ref: "Article",
     required: true,

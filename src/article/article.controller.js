@@ -95,11 +95,11 @@ export const publishArticle = async (req, res, next) => {
   const user = req.user;
   try {
     const article = await service.getArticle({ _id });
-    if (!article) return res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
+    if (!article) return res.status(404).send(RESPONSE.NOT_FOUND);
     if (user.role != ROLES.ADMIN)
       return res.status(403).send(RESPONSE.ACCESS_DENIED);
-    const publishedArticle = await service.togglePublish(_id, isPublished);
-    res.status(200).send(publishedArticle);
+    const updatedArticle = await service.togglePublish(_id, isPublished);
+    res.status(200).send(updatedArticle);
   } catch (err) {
     res.status(500).send(err.message);
   }
