@@ -20,6 +20,7 @@ export const ROUTES = {
     RESTORE_PASSWORD: "/restore-password",
     LOGOUT: "/logout",
     GET_USER: "/me",
+    GET_ALL_USERS: "/all",
     GET_ACCESS_TOKEN_BY_REFRESH_TOKEN: "/token",
   },
   COMMENT: {

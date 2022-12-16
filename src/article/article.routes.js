@@ -10,6 +10,7 @@ import {
 } from "./article.controller.js";
 import { auth } from "../middleware/auth.js";
 import { ROUTES } from "../helpers/routes.js";
+import { ROLES } from "../helpers/roles.js";
 
 export const articleRoutes = Router();
 
@@ -17,7 +18,7 @@ articleRoutes.get(ROUTES.BASE, getArticles);
 
 articleRoutes.get(
   ROUTES.ARTICLE.GET_UNPUBLISHED_ARTICLES,
-  auth,
+  auth([ROLES.ADMIN, ROLES.MANAGER]),
   getUnpublishedArticles
 );
 
@@ -28,8 +29,20 @@ articleRoutes.get(
   getArticlesByCategoryUrl
 );
 
-articleRoutes.post(ROUTES.BASE, auth, createArticle);
+articleRoutes.post(
+  ROUTES.BASE,
+  auth([ROLES.ADMIN, ROLES.MANAGER]),
+  createArticle
+);
 
-articleRoutes.post(ROUTES.ARTICLE.PUBLISH_ARTICLE, auth, publishArticle);
+articleRoutes.post(
+  ROUTES.ARTICLE.PUBLISH_ARTICLE,
+  auth([ROLES.ADMIN]),
+  publishArticle
+);
 
-articleRoutes.delete(ROUTES.ARTICLE.DELETE_ARTICLE, auth, deleteArticle);
+articleRoutes.delete(
+  ROUTES.ARTICLE.DELETE_ARTICLE,
+  auth([ROLES.ADMIN, ROLES.MANAGER]),
+  deleteArticle
+);
