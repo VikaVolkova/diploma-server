@@ -26,7 +26,7 @@ export const getArticleByUrl = async (req, res, next) => {
     const article = await service.getArticle({ url });
 
     if (!article) {
-      res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
+      res.status(404).send(RESPONSE.NOT_FOUND);
     }
 
     return res.status(200).json({ article });
