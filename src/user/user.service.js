@@ -27,3 +27,13 @@ export const restorePassword = async (email, password) => {
   user.password = await hash(password, salt);
   await user.save();
 };
+
+export const findAllUsers = async () => {
+  let users = await User.find();
+  let count = await User.find().count();
+  return { users, count };
+};
+
+export const updateUserRole = async (id, role) => {
+  await User.findByIdAndUpdate(id, { role });
+};

@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 import { RESPONSE } from "../helpers/response.js";
 import { RESTORE_PASSWORD_URL } from "../helpers/constants.js";
 import * as service from "./user.service.js";
+import { getParcedLimit } from "../utils/getLimit.js";
 
 export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
@@ -168,19 +169,44 @@ export const logout = async (req, res, next) => {
 };
 
 export const getUser = async (req, res, next) => {
-  const _id = req.user._id;
+  const email = req.user.email;
   try {
     if (!req.user) {
       return res.status(404).send(RESPONSE.USER.NOT_FOUND);
     }
 
-    const user = await service.findUser(_id);
+    const user = await service.findUser(email);
 
     if (!user) {
       return res.status(404).send(RESPONSE.USER.NOT_FOUND);
     }
 
     return res.status(200).json({ user });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const { users, count } = await service.findAllUsers();
+    return res.status(200).json({ users, count });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+export const updateRole = async (req, res, next) => {
+  const email = req.body.email;
+  const role = req.body.role;
+
+  try {
+    const user = await service.findUser(email);
+    if (!user) {
+      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+    }
+    await service.updateUserRole(user._id, role);
+    return res.status(200).send();
   } catch (err) {
     return res.status(500).send(err.message);
   }
