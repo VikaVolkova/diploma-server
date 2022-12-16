@@ -18,7 +18,11 @@ export const getArticles = async (query, limit, skip) => {
 };
 
 export const getArticle = async (data) => {
-  const article = await Article.findOne(data);
+  const article = await Article.findOne(data).populate([
+    "category",
+    "author",
+    { path: "comments", match: { isPublished: true } },
+  ]);
   return article;
 };
 
