@@ -4,8 +4,11 @@ import { RESPONSE } from "../helpers/response.js";
 
 export const auth = (roles) => (req, res, next) => {
   const token =
-    req.body?.accessToken || req.query?.token || req.headers["x-access-token"];
-  if (!token) return res?.status(403).send(RESPONSE.TOKEN_REQUIRED);
+    req.body.accessToken ||
+    req.body.token ||
+    req.query.token ||
+    req.header["x-access-token"];
+  if (!token) return res.status(403).send(RESPONSE.TOKEN_REQUIRED);
 
   try {
     const payload = jwt.verify(token, process.env.ACCESS_KEY);
