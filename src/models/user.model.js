@@ -14,6 +14,9 @@ const userSchema = new Schema({
     maxlength: 50,
     unique: true,
   },
+  image: {
+    type: String,
+  },
   role: {
     type: String,
     default: "USER",

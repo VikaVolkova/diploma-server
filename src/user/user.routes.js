@@ -9,6 +9,7 @@ import {
   getAccessTokenByRefreshToken,
   getAllUsers,
   updateRole,
+  checkPassword,
 } from "./user.controller.js";
 import { auth } from "../middleware/auth.js";
 import { check } from "express-validator";
@@ -24,7 +25,17 @@ userRoutes.post(ROUTES.USER.LOGIN, login);
 
 userRoutes.post(ROUTES.USER.FORGOT_PASSWORD, forgotPassword);
 
-userRoutes.post(ROUTES.USER.RESTORE_PASSWORD, auth(), restorePassword);
+userRoutes.post(
+  ROUTES.USER.RESTORE_PASSWORD,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  restorePassword
+);
+
+userRoutes.post(
+  ROUTES.USER.CHECK_PASSWORD,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  checkPassword
+);
 
 userRoutes.get(ROUTES.USER.LOGOUT, auth(), logout);
 

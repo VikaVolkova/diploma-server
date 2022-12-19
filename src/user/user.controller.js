@@ -154,6 +154,24 @@ export const restorePassword = async (req, res, next) => {
   }
 };
 
+export const checkPassword = async (req, res, next) => {
+  const { oldPassword, token } = req.body;
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_KEY);
+    let user = await service.findUser(decoded.email);
+    if (!user) {
+      return res.status(400).send(RESPONSE.USER.NOT_EXIST);
+    }
+    if (await compare(oldPassword, user.password)) {
+      return res.status(200).send();
+    } else {
+      return res.status(404).send("Incorrect password");
+    }
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
 export const logout = async (req, res, next) => {
   try {
     if (!req.user) {
