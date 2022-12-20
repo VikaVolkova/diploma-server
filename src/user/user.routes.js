@@ -11,6 +11,7 @@ import {
   updateRole,
   checkPassword,
   updateUser,
+  deleteUser,
 } from "./user.controller.js";
 import { auth } from "../middleware/auth.js";
 import { check } from "express-validator";
@@ -50,6 +51,12 @@ userRoutes.put(
   ROUTES.USER.UPDATE_USER,
   auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
   updateUser
+);
+
+userRoutes.delete(
+  ROUTES.USER.DELETE_USER,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  deleteUser
 );
 
 userRoutes.get(ROUTES.USER.GET_ALL_USERS, auth([ROLES.ADMIN]), getAllUsers);

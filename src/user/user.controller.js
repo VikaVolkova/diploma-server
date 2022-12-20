@@ -20,6 +20,7 @@ const makeTokenPayload = (user) => ({
   name: user.name,
   email: user.email,
   role: user.role,
+  image: user.image,
 });
 
 const makeAccessToken = (user) => {
@@ -237,8 +238,22 @@ export const updateUser = async (req, res, next) => {
     if (!user) {
       return res.status(404).send(RESPONSE.USER.NOT_FOUND);
     }
-    const updatedUser = await service.updateUser(user._id, name, email, image);
-    res.status(200).send(updatedUser);
+    await service.updateUser(user._id, name, email, image);
+    res.status(200).json({ image, name, email });
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  const { email } = req.user;
+  try {
+    const user = await service.findUser(email);
+    if (!user) {
+      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+    }
+    await service.deleteUser(user._id);
+    res.status(200).send();
   } catch (err) {
     return res.status(500).send(err.message);
   }
