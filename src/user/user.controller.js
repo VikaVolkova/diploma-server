@@ -1,4 +1,4 @@
-import { genSalt, hash, compare } from "bcrypt";
+import { compare } from "bcrypt";
 import {
   userSchemaRegister,
   userSchemaLogin,
@@ -10,7 +10,6 @@ import jwt from "jsonwebtoken";
 import { RESPONSE } from "../helpers/response.js";
 import { RESTORE_PASSWORD_URL } from "../helpers/constants.js";
 import * as service from "./user.service.js";
-import { getParcedLimit } from "../utils/getLimit.js";
 
 export const REFRESH_TOKEN = "refreshToken";
 export const ACCESS_TOKEN = "accessToken";
@@ -101,6 +100,7 @@ export const login = async (req, res, next) => {
       res.cookie(REFRESH_TOKEN, refreshToken, {
         secure: true,
         httpOnly: true,
+        SameSite: "lax",
       });
 
       return res.status(200).json({ user, accessToken });
@@ -191,7 +191,7 @@ export const logout = async (req, res, next) => {
 };
 
 export const getUser = async (req, res, next) => {
-  const email = req.user.email;
+  const email = req.user?.email;
   try {
     if (!req.user) {
       return res.status(404).send(RESPONSE.USER.NOT_FOUND);
