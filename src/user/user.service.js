@@ -41,3 +41,7 @@ export const updateUserRole = async (id, role) => {
 export const updateUser = async (id, name, email, image) => {
   await User.findByIdAndUpdate(id, { name, email, image });
 };
+
+export const deleteUser = async (id) => {
+  await User.findByIdAndDelete(id);
+};
