@@ -10,6 +10,7 @@ import {
   getAllUsers,
   updateRole,
   checkPassword,
+  updateUser,
 } from "./user.controller.js";
 import { auth } from "../middleware/auth.js";
 import { check } from "express-validator";
@@ -39,7 +40,17 @@ userRoutes.post(
 
 userRoutes.get(ROUTES.USER.LOGOUT, auth(), logout);
 
-userRoutes.get(ROUTES.USER.GET_USER, auth(), getUser);
+userRoutes.get(
+  ROUTES.USER.GET_USER,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  getUser
+);
+
+userRoutes.put(
+  ROUTES.USER.UPDATE_USER,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  updateUser
+);
 
 userRoutes.get(ROUTES.USER.GET_ALL_USERS, auth([ROLES.ADMIN]), getAllUsers);
 

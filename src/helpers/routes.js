@@ -19,6 +19,7 @@ export const ROUTES = {
     FORGOT_PASSWORD: "/forgot-password",
     RESTORE_PASSWORD: "/restore-password",
     CHECK_PASSWORD: "/check-password",
+    UPDATE_USER: "/update-user",
     LOGOUT: "/logout",
     GET_USER: "/me",
     GET_ALL_USERS: "/all",

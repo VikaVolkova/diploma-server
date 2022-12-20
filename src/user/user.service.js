@@ -37,3 +37,7 @@ export const findAllUsers = async () => {
 export const updateUserRole = async (id, role) => {
   await User.findByIdAndUpdate(id, { role });
 };
+
+export const updateUser = async (id, name, email, image) => {
+  await User.findByIdAndUpdate(id, { name, email, image });
+};

@@ -7,7 +7,7 @@ export const auth = (roles) => (req, res, next) => {
     req.body.accessToken ||
     req.body.token ||
     req.query.token ||
-    req.header["x-access-token"];
+    req.headers["x-access-token"];
   if (!token) return res.status(403).send(RESPONSE.TOKEN_REQUIRED);
 
   try {

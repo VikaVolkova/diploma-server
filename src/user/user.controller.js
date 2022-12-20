@@ -199,7 +199,7 @@ export const getUser = async (req, res, next) => {
       return res.status(404).send(RESPONSE.USER.NOT_FOUND);
     }
 
-    return res.status(200).json({ user });
+    return res.status(200).json(user);
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -215,8 +215,7 @@ export const getAllUsers = async (req, res, next) => {
 };
 
 export const updateRole = async (req, res, next) => {
-  const email = req.body.email;
-  const role = req.body.role;
+  const { email, role } = req.body;
 
   try {
     const user = await service.findUser(email);
@@ -225,6 +224,21 @@ export const updateRole = async (req, res, next) => {
     }
     await service.updateUserRole(user._id, role);
     return res.status(200).send();
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  const { image, name, email } = req.body;
+  const currentEmail = req.user.email;
+  try {
+    const user = await service.findUser(currentEmail);
+    if (!user) {
+      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+    }
+    const updatedUser = await service.updateUser(user._id, name, email, image);
+    res.status(200).send(updatedUser);
   } catch (err) {
     return res.status(500).send(err.message);
   }
