@@ -98,7 +98,10 @@ export const login = async (req, res, next) => {
       const accessToken = makeAccessToken(payload);
       const refreshToken = makeRefreshToken(payload);
 
-      res.cookie(REFRESH_TOKEN, refreshToken);
+      res.cookie(REFRESH_TOKEN, refreshToken, {
+        secure: true,
+        httpOnly: true,
+      });
 
       return res.status(200).json({ user, accessToken });
     } else {
