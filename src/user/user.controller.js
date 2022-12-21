@@ -22,8 +22,7 @@ const makeTokenPayload = (user) => ({
   image: user.image,
 });
 
-const makeAccessToken = (user) => {
-  const payload = makeTokenPayload(user);
+const makeAccessToken = (payload) => {
   const accessTokenLife = "1h";
 
   return jwt.sign(payload, process.env.ACCESS_KEY, {

@@ -11,4 +11,5 @@ export const articleSchema = Joi.object({
   date: Joi.date(),
   url: Joi.string().max(30).required(),
   comments: Joi.array(),
+  likes: Joi.number(),
 });

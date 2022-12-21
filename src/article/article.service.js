@@ -17,6 +17,18 @@ export const getArticles = async (query, limit, skip) => {
   return { data, count };
 };
 
+export const getPopularArticles = async () => {
+  const data = await Article.find()
+    .populate([
+      "category",
+      "author",
+      { path: "comments", match: { isPublished: true } },
+    ])
+    .sort({ likes: -1 })
+    .limit(4);
+  return data;
+};
+
 export const getArticle = async (data) => {
   const article = await Article.findOne(data).populate([
     "category",
@@ -59,4 +71,9 @@ export const togglePublish = async (id, isPublished) => {
 export const deleteArticle = async (id) => {
   const deletedArticle = await Article.findByIdAndDelete(id);
   return deletedArticle;
+};
+
+export const toggleLike = async (id, userId, liked) => {
+  liked && (await Article.findByIdAndUpdate(id, { $push: { likes: userId } }));
+  !liked && (await Article.findByIdAndUpdate(id, { $pull: { likes: userId } }));
 };

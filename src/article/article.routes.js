@@ -3,10 +3,12 @@ import {
   getArticles,
   getUnpublishedArticles,
   getArticleByUrl,
+  toggleLike,
   getArticlesByCategoryUrl,
   createArticle,
   publishArticle,
   deleteArticle,
+  getPopularArticles,
 } from "./article.controller.js";
 import { auth } from "../middleware/auth.js";
 import { ROUTES } from "../helpers/routes.js";
@@ -16,6 +18,8 @@ export const articleRoutes = Router();
 
 articleRoutes.get(ROUTES.BASE, getArticles);
 
+articleRoutes.get(ROUTES.ARTICLE.GET_POPULAR_ARTICLES, getPopularArticles);
+
 articleRoutes.get(
   ROUTES.ARTICLE.GET_UNPUBLISHED_ARTICLES,
   auth([ROLES.ADMIN, ROLES.MANAGER]),
@@ -23,6 +27,12 @@ articleRoutes.get(
 );
 
 articleRoutes.get(ROUTES.ARTICLE.GET_ARTICLE_BY_URL, getArticleByUrl);
+
+articleRoutes.put(
+  ROUTES.ARTICLE.TOGGLE_LIKE,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  toggleLike
+);
 
 articleRoutes.get(
   ROUTES.ARTICLE.GET_ARTICLES_BY_CATEGORY_URL,
