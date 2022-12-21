@@ -2,6 +2,7 @@ import { getParcedLimit } from "../utils/getLimit.js";
 import { RESPONSE } from "../helpers/response.js";
 import { ROLES } from "../helpers/roles.js";
 import * as service from "./article.service.js";
+import mongoose from "mongoose";
 
 export const getArticles = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 10, 10);
@@ -20,6 +21,17 @@ export const getArticles = async (req, res, next) => {
   }
 };
 
+export const getPopularArticles = async (req, res, next) => {
+  try {
+    const data = await service.getPopularArticles();
+    return res.status(200).json({
+      data,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const getArticleByUrl = async (req, res, next) => {
   const url = req.params.newsUrl;
   try {
@@ -30,6 +42,24 @@ export const getArticleByUrl = async (req, res, next) => {
     }
 
     return res.status(200).json({ article });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const toggleLike = async (req, res, next) => {
+  const _id = req.params.id;
+  const { liked } = req.body;
+  const userId = mongoose.Types.ObjectId(req.user._id);
+  try {
+    const article = await service.getArticle({ _id });
+
+    if (!article) {
+      res.status(404).send(RESPONSE.NOT_FOUND);
+    }
+    await service.toggleLike(_id, userId, liked);
+    const data = await service.getArticle({ _id });
+    return res.status(200).json({ data });
   } catch (err) {
     return next(err);
   }

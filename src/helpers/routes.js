@@ -10,8 +10,10 @@ export const ROUTES = {
     GET_UNPUBLISHED_ARTICLES: "/unpublished",
     GET_ARTICLE_BY_URL: "/:newsUrl",
     GET_ARTICLES_BY_CATEGORY_URL: "/category/:categoryUrl",
+    GET_POPULAR_ARTICLES: "/popular",
     PUBLISH_ARTICLE: "/publish/:id",
     DELETE_ARTICLE: "/:id",
+    TOGGLE_LIKE: "/like/:id",
   },
   USER: {
     REGISTER: "/register",

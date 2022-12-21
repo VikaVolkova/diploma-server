@@ -46,6 +46,7 @@ const articleSchema = new Schema({
     maxlength: 30,
   },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 export const Article = model("Article", articleSchema);
