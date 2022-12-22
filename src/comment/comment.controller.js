@@ -5,9 +5,9 @@ import { getParcedLimit } from "../utils/getLimit.js";
 import * as service from "./comment.service.js";
 
 export const getCommentsByArticleId = async (req, res, next) => {
-  const article = Types.ObjectId(req.params.article);
+  const articleId = Types.ObjectId(req.params.articleId);
   try {
-    const data = await service.getCommentsByArticleId(article);
+    const data = await service.getCommentsByArticleId(articleId);
     res.status(200).send({ data });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -57,8 +57,8 @@ export const deleteComment = async (req, res, next) => {
     if (!comment) return res.status(404).send(RESPONSE.NOT_FOUND);
     if (user.role != ROLES.ADMIN && user._id != comment.author._id)
       return res.status(403).send(RESPONSE.ACCESS_DENIED);
-    const deletedComment = await service.deleteArticle(_id);
-    res.status(200).send(deletedComment);
+    const data = await service.deleteArticle(_id);
+    res.status(200).send(data);
   } catch (err) {
     res.status(500).send(err.message);
   }

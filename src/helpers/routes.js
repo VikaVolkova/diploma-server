@@ -14,6 +14,7 @@ export const ROUTES = {
     PUBLISH_ARTICLE: "/publish/:id",
     DELETE_ARTICLE: "/:id",
     TOGGLE_LIKE: "/like/:id",
+    TOGGLE_COMMENT: "/comment/:id",
   },
   USER: {
     REGISTER: "/register",
@@ -29,7 +30,7 @@ export const ROUTES = {
     GET_ACCESS_TOKEN_BY_REFRESH_TOKEN: "/token",
   },
   COMMENT: {
-    GET_COMMENTS_BY_ARTICLE_ID: "/article/:article",
+    GET_COMMENTS_BY_ARTICLE_ID: "/article/:articleId",
     GET_UNPUBLISHED_COMMENTS: "/unpublished",
     PUBLISH_COMMENT: "/publish/:id",
     DELETE_COMMENT: "/:id",
