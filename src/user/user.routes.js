@@ -39,7 +39,11 @@ userRoutes.post(
   checkPassword
 );
 
-userRoutes.get(ROUTES.USER.LOGOUT, auth(), logout);
+userRoutes.get(
+  ROUTES.USER.LOGOUT,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  logout
+);
 
 userRoutes.get(
   ROUTES.USER.GET_USER,

@@ -65,6 +65,24 @@ export const toggleLike = async (req, res, next) => {
   }
 };
 
+export const toggleComment = async (req, res, next) => {
+  const _id = req.params.id;
+  const { deleted } = req.body;
+  const commentId = mongoose.Types.ObjectId(req.body.commentId);
+  try {
+    const article = await service.getArticle({ _id });
+
+    if (!article) {
+      res.status(404).send(RESPONSE.NOT_FOUND);
+    }
+    await service.toggleComment(_id, commentId, deleted);
+    const data = await service.getArticle({ _id });
+    return res.status(200).json({ data });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 export const getArticlesByCategoryUrl = async (req, res, next) => {
   const limit = getParcedLimit(Number(req.query.limit), 4, 10);
   const skip = Number(req.query.skip) || 0;

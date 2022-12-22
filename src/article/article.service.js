@@ -33,7 +33,7 @@ export const getArticle = async (data) => {
   const article = await Article.findOne(data).populate([
     "category",
     "author",
-    { path: "comments", match: { isPublished: true } },
+    // { path: "comments", match: { isPublished: true } },
   ]);
   return article;
 };
@@ -76,4 +76,11 @@ export const deleteArticle = async (id) => {
 export const toggleLike = async (id, userId, liked) => {
   liked && (await Article.findByIdAndUpdate(id, { $push: { likes: userId } }));
   !liked && (await Article.findByIdAndUpdate(id, { $pull: { likes: userId } }));
+};
+
+export const toggleComment = async (id, commentId, deleted) => {
+  !deleted &&
+    (await Article.findByIdAndUpdate(id, { $push: { comments: commentId } }));
+  deleted &&
+    (await Article.findByIdAndUpdate(id, { $pull: { comments: commentId } }));
 };

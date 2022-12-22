@@ -17,7 +17,11 @@ commentRoutes.get(
   getCommentsByArticleId
 );
 
-commentRoutes.post(ROUTES.BASE, auth(), createComment);
+commentRoutes.post(
+  ROUTES.BASE,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  createComment
+);
 commentRoutes.post(
   ROUTES.COMMENT.PUBLISH_COMMENT,
   auth([ROLES.ADMIN, ROLES.MANAGER]),

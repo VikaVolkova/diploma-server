@@ -4,6 +4,7 @@ import {
   getUnpublishedArticles,
   getArticleByUrl,
   toggleLike,
+  toggleComment,
   getArticlesByCategoryUrl,
   createArticle,
   publishArticle,
@@ -32,6 +33,12 @@ articleRoutes.put(
   ROUTES.ARTICLE.TOGGLE_LIKE,
   auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
   toggleLike
+);
+
+articleRoutes.put(
+  ROUTES.ARTICLE.TOGGLE_COMMENT,
+  auth([ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]),
+  toggleComment
 );
 
 articleRoutes.get(
