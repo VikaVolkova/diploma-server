@@ -9,6 +9,7 @@ import {
   createArticle,
   publishArticle,
   deleteArticle,
+  updateArticle,
   getPopularArticles,
 } from "./article.controller.js";
 import { auth } from "../middleware/auth.js";
@@ -62,4 +63,10 @@ articleRoutes.delete(
   ROUTES.ARTICLE.DELETE_ARTICLE,
   auth([ROLES.ADMIN, ROLES.MANAGER]),
   deleteArticle
+);
+
+articleRoutes.put(
+  ROUTES.ARTICLE.UPDATE_ARTICLE,
+  auth([ROLES.ADMIN, ROLES.MANAGER]),
+  updateArticle
 );

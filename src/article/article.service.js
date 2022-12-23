@@ -73,6 +73,11 @@ export const deleteArticle = async (id) => {
   return deletedArticle;
 };
 
+export const updateArticle = async (id, data) => {
+  const updatedArticle = await Article.findByIdAndUpdate(id, { ...data });
+  return updatedArticle;
+};
+
 export const toggleLike = async (id, userId, liked) => {
   liked && (await Article.findByIdAndUpdate(id, { $push: { likes: userId } }));
   !liked && (await Article.findByIdAndUpdate(id, { $pull: { likes: userId } }));
