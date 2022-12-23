@@ -167,3 +167,19 @@ export const deleteArticle = async (req, res, next) => {
     res.status(500).send(err.message);
   }
 };
+
+export const updateArticle = async (req, res, next) => {
+  const _id = req.params.id;
+  const user = req.user;
+  const data = req.body;
+  try {
+    const article = await service.getArticle({ _id });
+    if (!article) return res.status(404).send(RESPONSE.ARTICLE.NOT_FOUND);
+    if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER)
+      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+    const updatedArticle = await service.updateArticle(_id, data);
+    res.status(200).send(updatedArticle);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};

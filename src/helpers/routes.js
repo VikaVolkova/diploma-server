@@ -13,6 +13,7 @@ export const ROUTES = {
     GET_POPULAR_ARTICLES: "/popular",
     PUBLISH_ARTICLE: "/publish/:id",
     DELETE_ARTICLE: "/:id",
+    UPDATE_ARTICLE: "/update/:id",
     TOGGLE_LIKE: "/like/:id",
     TOGGLE_COMMENT: "/comment/:id",
   },
