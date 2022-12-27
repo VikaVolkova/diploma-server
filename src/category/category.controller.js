@@ -1,5 +1,4 @@
-import { ROLES } from "../helpers/roles.js";
-import { RESPONSE } from "../helpers/response.js";
+import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
 import * as service from "./category.service.js";
 
 export const getCategories = async (req, res, next) => {
@@ -15,7 +14,7 @@ export const createCategory = async (req, res, next) => {
   const user = req.user;
   try {
     if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER) {
-      return res.status(403).send(RESPONSE.ACCESS_DENIED);
+      return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
     }
     const category = await service.createCategory({ ...req.body });
     res.status(201).send(category);

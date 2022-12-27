@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 import { genSalt, hash } from "bcrypt";
-import { RESPONSE } from "../helpers/response.js";
+import { RESPONSE_MESSAGES } from "../helpers/index.js";
 
 export const findUser = async (email) => {
   let user = await User.findOne({ email });
@@ -21,10 +21,12 @@ export const register = async (data) => {
 export const restorePassword = async (email, password) => {
   const user = await findUser(email);
   if (!user) {
-    return res.status(400).send(RESPONSE.USER.NOT_EXIST);
+    return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EXIST);
   }
+
   const salt = await genSalt(10);
   user.password = await hash(password, salt);
+
   await user.save();
 };
 

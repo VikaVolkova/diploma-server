@@ -11,7 +11,7 @@ import { join } from "path";
 import * as dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { ROUTES } from "./helpers/routes.js";
+import { ROUTES, ORIGIN_PATH } from "./helpers/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,7 +23,7 @@ dotenv.config();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.ORIGIN_PATH,
+    origin: ORIGIN_PATH,
     credentials: true,
   })
 );
