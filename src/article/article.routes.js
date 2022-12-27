@@ -59,7 +59,7 @@ articleRoutes.post(
   publishArticle
 );
 
-articleRoutes.delete(
+articleRoutes.put(
   ROUTES.ARTICLE.DELETE_ARTICLE,
   auth([ROLES.ADMIN, ROLES.MANAGER]),
   deleteArticle

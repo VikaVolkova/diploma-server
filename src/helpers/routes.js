@@ -12,7 +12,7 @@ export const ROUTES = {
     GET_ARTICLES_BY_CATEGORY_URL: "/category/:categoryUrl",
     GET_POPULAR_ARTICLES: "/popular",
     PUBLISH_ARTICLE: "/publish/:id",
-    DELETE_ARTICLE: "/:id",
+    DELETE_ARTICLE: "/delete/:id",
     UPDATE_ARTICLE: "/update/:id",
     TOGGLE_LIKE: "/like/:id",
     TOGGLE_COMMENT: "/comment/:id",

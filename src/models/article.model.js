@@ -36,6 +36,10 @@ const articleSchema = new Schema({
   isPublished: {
     type: Boolean,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: new Date(),

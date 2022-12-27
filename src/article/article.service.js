@@ -18,7 +18,7 @@ export const getArticles = async (query, limit, skip) => {
 };
 
 export const getPopularArticles = async () => {
-  const data = await Article.find()
+  const data = await Article.find({ isPublished: true, isDeleted: false })
     .populate([
       "category",
       "author",
@@ -30,11 +30,7 @@ export const getPopularArticles = async () => {
 };
 
 export const getArticle = async (data) => {
-  const article = await Article.findOne(data).populate([
-    "category",
-    "author",
-    // { path: "comments", match: { isPublished: true } },
-  ]);
+  const article = await Article.findOne(data).populate(["category", "author"]);
   return article;
 };
 
@@ -44,6 +40,7 @@ export const getArticlesByCategoryUrl = async (skip, limit, categoryUrl) => {
   const query = {
     category: categoryId,
     isPublished: true,
+    isDeleted: false,
   };
 
   const { data, count } = await getArticles(query, limit, skip);
@@ -55,6 +52,7 @@ export const createArticle = async (data) => {
   let article = new Article({
     ...data,
     isPublished: false,
+    isDeleted: false,
     date: new Date(),
   });
   article = await article.save();
@@ -69,7 +67,9 @@ export const togglePublish = async (id, isPublished) => {
 };
 
 export const deleteArticle = async (id) => {
-  const deletedArticle = await Article.findByIdAndDelete(id);
+  const deletedArticle = await Article.findByIdAndUpdate(id, {
+    isDeleted: true,
+  });
   return deletedArticle;
 };
 
@@ -79,13 +79,13 @@ export const updateArticle = async (id, data) => {
 };
 
 export const toggleLike = async (id, userId, liked) => {
-  liked && (await Article.findByIdAndUpdate(id, { $push: { likes: userId } }));
-  !liked && (await Article.findByIdAndUpdate(id, { $pull: { likes: userId } }));
+  liked
+    ? await Article.findByIdAndUpdate(id, { $push: { likes: userId } })
+    : await Article.findByIdAndUpdate(id, { $pull: { likes: userId } });
 };
 
 export const toggleComment = async (id, commentId, deleted) => {
-  !deleted &&
-    (await Article.findByIdAndUpdate(id, { $push: { comments: commentId } }));
-  deleted &&
-    (await Article.findByIdAndUpdate(id, { $pull: { comments: commentId } }));
+  !deleted
+    ? await Article.findByIdAndUpdate(id, { $push: { comments: commentId } })
+    : await Article.findByIdAndUpdate(id, { $pull: { comments: commentId } });
 };

@@ -5,10 +5,14 @@ import {
   userSchemaForgotPassword,
   userSchemaRestorePassword,
 } from "../validation/user.js";
-import { sendEmail } from "../utils/sendEmail.js";
+import {
+  sendEmail,
+  RESPONSE_MESSAGES,
+  RESTORE_PASSWORD_URL,
+  ACCESS_KEY,
+} from "../helpers/index.js";
 import jwt from "jsonwebtoken";
-import { RESPONSE } from "../helpers/response.js";
-import { RESTORE_PASSWORD_URL } from "../helpers/constants.js";
+
 import * as service from "./user.service.js";
 
 export const REFRESH_TOKEN = "refreshToken";
@@ -25,7 +29,7 @@ const makeTokenPayload = (user) => ({
 const makeAccessToken = (payload) => {
   const accessTokenLife = "1h";
 
-  return jwt.sign(payload, process.env.ACCESS_KEY, {
+  return jwt.sign(payload, ACCESS_KEY, {
     expiresIn: accessTokenLife,
   });
 };
@@ -43,7 +47,7 @@ export const getAccessTokenByRefreshToken = async (req, res, next) => {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      return res.status(404).send(RESPONSE.USER.NO_TOKEN);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NO_TOKEN);
     }
 
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN);
@@ -70,7 +74,8 @@ export const register = async (req, res, next) => {
 
   try {
     const user = await service.findUser(email);
-    if (user) return res.status(400).send(RESPONSE.USER.EMAIL_EXISTS);
+    if (user) return res.status(400).send(RESPONSE_MESSAGES.USER.EMAIL_EXISTS);
+
     await service.register({ name, email, password });
 
     res.status(201).send();
@@ -88,7 +93,7 @@ export const login = async (req, res, next) => {
   try {
     const user = await service.findUser(email);
     if (!user) {
-      return res.status(400).send(RESPONSE.USER.NOT_EXIST);
+      return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EXIST);
     }
 
     if (await compare(password, user.password)) {
@@ -119,7 +124,7 @@ export const forgotPassword = async (req, res, next) => {
   try {
     let user = await service.findUser(email);
     if (!user) {
-      return res.status(400).send(RESPONSE.USER.NOT_EXIST);
+      return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EXIST);
     }
     const payload = makeTokenPayload(user);
     const accessToken = makeAccessToken(payload);
@@ -140,18 +145,19 @@ export const restorePassword = async (req, res, next) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   if (!req.user) {
-    return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+    return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
   }
 
   if (password1 !== password2) {
-    return res.status(400).send(RESPONSE.USER.NOT_EQUAL_PASS);
+    return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EQUAL_PASS);
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_KEY);
+    const decoded = jwt.verify(token, ACCESS_KEY);
 
     await service.restorePassword(decoded.email, password1);
-    return res.status(200).send(RESPONSE.UPDATED);
+
+    return res.status(200).send(RESPONSE_MESSAGES.UPDATED);
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -160,15 +166,17 @@ export const restorePassword = async (req, res, next) => {
 export const checkPassword = async (req, res, next) => {
   const { oldPassword, token } = req.body;
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_KEY);
+    const decoded = jwt.verify(token, ACCESS_KEY);
+
     let user = await service.findUser(decoded.email);
     if (!user) {
-      return res.status(400).send(RESPONSE.USER.NOT_EXIST);
+      return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EXIST);
     }
+
     if (await compare(oldPassword, user.password)) {
       return res.status(200).send();
     } else {
-      return res.status(404).send("Incorrect password");
+      return res.status(404).send(RESPONSE_MESSAGES.USER.INVALID_PASSWORD);
     }
   } catch (err) {
     return res.status(500).send(err.message);
@@ -178,7 +186,7 @@ export const checkPassword = async (req, res, next) => {
 export const logout = async (req, res, next) => {
   try {
     if (!req.user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
 
     res.clearCookie(REFRESH_TOKEN);
@@ -193,13 +201,13 @@ export const getUser = async (req, res, next) => {
   const email = req.user?.email;
   try {
     if (!req.user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
 
     const user = await service.findUser(email);
 
     if (!user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
 
     return res.status(200).json(user);
@@ -211,6 +219,7 @@ export const getUser = async (req, res, next) => {
 export const getAllUsers = async (req, res, next) => {
   try {
     const { users, count } = await service.findAllUsers();
+
     return res.status(200).json({ users, count });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -223,9 +232,11 @@ export const updateRole = async (req, res, next) => {
   try {
     const user = await service.findUser(email);
     if (!user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
+
     await service.updateUserRole(user._id, role);
+
     return res.status(200).send();
   } catch (err) {
     return res.status(500).send(err.message);
@@ -238,9 +249,11 @@ export const updateUser = async (req, res, next) => {
   try {
     const user = await service.findUser(currentEmail);
     if (!user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
+
     await service.updateUser(user._id, name, email, image);
+
     res.status(200).json({ image, name, email });
   } catch (err) {
     return res.status(500).send(err.message);
@@ -252,9 +265,11 @@ export const deleteUser = async (req, res, next) => {
   try {
     const user = await service.findUser(email);
     if (!user) {
-      return res.status(404).send(RESPONSE.USER.NOT_FOUND);
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
     }
+
     await service.deleteUser(user._id);
+
     res.status(200).send();
   } catch (err) {
     return res.status(500).send(err.message);
