@@ -13,7 +13,7 @@ export const register = async (data) => {
   });
 
   const salt = await genSalt(10);
-  user.password = await hash(user.password, salt);
+  !data.googleUser && (user.password = await hash(data.password, salt));
 
   await user.save();
 };
