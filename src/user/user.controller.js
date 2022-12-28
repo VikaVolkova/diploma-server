@@ -23,7 +23,6 @@ const makeTokenPayload = (user) => ({
   name: user.name,
   email: user.email,
   role: user.role,
-  image: user.image,
 });
 
 const makeAccessToken = (payload) => {
@@ -67,7 +66,7 @@ export const getAccessTokenByRefreshToken = async (req, res, next) => {
 };
 
 export const register = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { email } = req.body;
 
   const { error } = userSchemaRegister.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -76,7 +75,7 @@ export const register = async (req, res, next) => {
     const user = await service.findUser(email);
     if (user) return res.status(400).send(RESPONSE_MESSAGES.USER.EMAIL_EXISTS);
 
-    await service.register({ name, email, password });
+    await service.register({ ...req.body });
 
     res.status(201).send();
   } catch (err) {
@@ -85,18 +84,19 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, googleUser } = req.body;
 
   const { error } = userSchemaLogin.validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(404).send(error.details[0].message);
 
   try {
     const user = await service.findUser(email);
     if (!user) {
       return res.status(400).send(RESPONSE_MESSAGES.USER.NOT_EXIST);
     }
+    const userPassword = Object.toString(user?.password);
 
-    if (await compare(password, user.password)) {
+    if (!googleUser ? compare(password, userPassword) : true) {
       const payload = makeTokenPayload(user);
       const accessToken = makeAccessToken(payload);
       const refreshToken = makeRefreshToken(payload);
@@ -109,7 +109,7 @@ export const login = async (req, res, next) => {
 
       return res.status(200).json({ user, accessToken });
     } else {
-      return res.status(404).send();
+      return res.status(404).send(RESPONSE_MESSAGES.USER.INVALID_PASSWORD);
     }
   } catch (err) {
     return res.status(500).send(err.message);

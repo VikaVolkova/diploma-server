@@ -21,9 +21,12 @@ const userSchema = new Schema({
     type: String,
     default: "USER",
   },
+  googleUser: {
+    type: Boolean,
+    default: false,
+  },
   password: {
     type: String,
-    required: true,
     minlength: 6,
     maxlength: 1024,
   },
