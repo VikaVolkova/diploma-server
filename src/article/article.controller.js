@@ -1,18 +1,14 @@
-import { getParcedLimit, RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
+import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
 import * as service from "./article.service.js";
 import mongoose from "mongoose";
 
 export const getArticles = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 10, 10);
-  const skip = Number(req.query.skip) || 0;
   const query = { isPublished: true, isDeleted: false };
   try {
-    const { data, count } = await service.getArticles(query, limit, skip);
+    const { data, count } = await service.getArticles(query);
 
     return res.status(200).json({
       data,
-      limit,
-      skip,
       count,
     });
   } catch (err) {
@@ -87,21 +83,13 @@ export const toggleComment = async (req, res, next) => {
 };
 
 export const getArticlesByCategoryUrl = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
-  const skip = Number(req.query.skip) || 0;
   const categoryUrl = req.params.categoryUrl;
 
   try {
-    const { data, count } = await service.getArticlesByCategoryUrl(
-      skip,
-      limit,
-      categoryUrl
-    );
+    const { data, count } = await service.getArticlesByCategoryUrl(categoryUrl);
 
     return res.status(200).json({
       data,
-      limit,
-      skip,
       count,
     });
   } catch (err) {
@@ -110,8 +98,6 @@ export const getArticlesByCategoryUrl = async (req, res, next) => {
 };
 
 export const getUnpublishedArticles = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 10, 10);
-  const skip = Number(req.query.skip) || 0;
   const user = req.user;
   const author = user.role === ROLES.MANAGER ? { author: user._id } : null;
 
@@ -122,12 +108,10 @@ export const getUnpublishedArticles = async (req, res, next) => {
   };
 
   try {
-    const { data, count } = await service.getArticles(query, limit, skip);
+    const { data, count } = await service.getArticles(query);
 
     return res.status(200).json({
       data,
-      limit,
-      skip,
       count,
     });
   } catch (err) {

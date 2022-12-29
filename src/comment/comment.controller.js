@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { RESPONSE_MESSAGES, ROLES, getParcedLimit } from "../helpers/index.js";
+import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
 import * as service from "./comment.service.js";
 
 export const getCommentsByArticleId = async (req, res, next) => {
@@ -24,12 +24,10 @@ export const createComment = async (req, res, next) => {
 };
 
 export const getUnpublishedComments = async (req, res, next) => {
-  const limit = getParcedLimit(Number(req.query.limit), 4, 10);
-  const skip = Number(req.query.skip) || 0;
   try {
-    const { data, count } = await service.getUnpublishedComments(limit, skip);
+    const { data, count } = await service.getUnpublishedComments();
 
-    res.status(200).json({ data, count, limit, skip });
+    res.status(200).json({ data, count });
   } catch (err) {
     return res.status(500).send(err.message);
   }
