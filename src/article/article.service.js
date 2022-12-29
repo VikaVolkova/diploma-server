@@ -1,16 +1,14 @@
 import { Article } from "../models/article.model.js";
 import { Category } from "../models/category.model.js";
 
-export const getArticles = async (query, limit, skip) => {
+export const getArticles = async (query) => {
   const data = await Article.find(query)
     .populate([
       "category",
       "author",
       { path: "comments", match: { isPublished: true } },
     ])
-    .sort({ date: -1 })
-    .limit(limit)
-    .skip(skip);
+    .sort({ date: -1 });
 
   const count = await Article.find(query).count();
 
@@ -34,7 +32,7 @@ export const getArticle = async (data) => {
   return article;
 };
 
-export const getArticlesByCategoryUrl = async (skip, limit, categoryUrl) => {
+export const getArticlesByCategoryUrl = async (categoryUrl) => {
   const category = await Category.findOne({ url: categoryUrl });
   const categoryId = category._id;
   const query = {
@@ -43,7 +41,7 @@ export const getArticlesByCategoryUrl = async (skip, limit, categoryUrl) => {
     isDeleted: false,
   };
 
-  const { data, count } = await getArticles(query, limit, skip);
+  const { data, count } = await getArticles(query);
 
   return { data, count };
 };
