@@ -47,3 +47,8 @@ export const updateUser = async (id, name, email, image) => {
 export const deleteUser = async (id) => {
   await User.findByIdAndDelete(id);
 };
+
+export const toggleBlockUser = async (id, isBlocked) => {
+  const updatedUser = await User.findByIdAndUpdate(id, { isBlocked });
+  return { updatedUser };
+};

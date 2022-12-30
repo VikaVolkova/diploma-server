@@ -12,6 +12,7 @@ import {
   checkPassword,
   updateUser,
   deleteUser,
+  toggleBlockUser,
 } from "./user.controller.js";
 import { auth } from "../middleware/auth.js";
 import { check } from "express-validator";
@@ -66,6 +67,12 @@ userRoutes.delete(
 userRoutes.get(ROUTES.USER.GET_ALL_USERS, auth([ROLES.ADMIN]), getAllUsers);
 
 userRoutes.put(ROUTES.BASE, auth([ROLES.ADMIN]), updateRole);
+
+userRoutes.put(
+  ROUTES.USER.TOGGLE_BLOCK_USER,
+  auth([ROLES.ADMIN]),
+  toggleBlockUser
+);
 
 userRoutes.get(
   ROUTES.USER.GET_ACCESS_TOKEN_BY_REFRESH_TOKEN,

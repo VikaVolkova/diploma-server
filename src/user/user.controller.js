@@ -237,8 +237,9 @@ export const updateRole = async (req, res, next) => {
     }
 
     await service.updateUserRole(user._id, role);
+    const { users } = await service.findAllUsers();
 
-    return res.status(200).send();
+    res.status(200).json(users);
   } catch (err) {
     return res.status(500).send(err.message);
   }
@@ -273,6 +274,23 @@ export const deleteUser = async (req, res, next) => {
 
     res.status(200).send();
   } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
+export const toggleBlockUser = async (req, res, next) => {
+  const { email, isBlocked } = req.body;
+  try {
+    const user = await service.findUser(email);
+    if (!user) {
+      return res.status(404).send(RESPONSE_MESSAGES.USER.NOT_FOUND);
+    }
+
+    await service.toggleBlockUser(user._id, isBlocked);
+    const { users } = await service.findAllUsers();
+
+    res.status(200).json({ users });
+  } catch (error) {
     return res.status(500).send(err.message);
   }
 };
