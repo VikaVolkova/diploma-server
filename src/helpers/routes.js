@@ -25,6 +25,7 @@ export const ROUTES = {
     CHECK_PASSWORD: "/check-password",
     UPDATE_USER: "/update-user",
     DELETE_USER: "/delete-user",
+    TOGGLE_BLOCK_USER: "/block-user",
     LOGOUT: "/logout",
     GET_USER: "/me",
     GET_ALL_USERS: "/all",
