@@ -15,6 +15,10 @@ const categorySchema = new Schema({
     maxlength: 20,
     unique: true,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const Category = model("Category", categorySchema);
