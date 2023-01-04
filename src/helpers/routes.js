@@ -31,6 +31,10 @@ export const ROUTES = {
     GET_ALL_USERS: "/all",
     GET_ACCESS_TOKEN_BY_REFRESH_TOKEN: "/token",
   },
+  CATEGORY: {
+    DELETE: "/delete-category/:id",
+    GET_ACTIVE_CATEGORIES: "/active",
+  },
   COMMENT: {
     GET_COMMENTS_BY_ARTICLE_ID: "/article/:articleId",
     GET_UNPUBLISHED_COMMENTS: "/unpublished",

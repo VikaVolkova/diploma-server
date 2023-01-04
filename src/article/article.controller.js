@@ -152,8 +152,7 @@ export const deleteArticle = async (req, res, next) => {
   const user = req.user;
   try {
     const article = await service.getArticle({ _id });
-    if (!article)
-      return res.status(404).send(RESPONSE_MESSAGES.ARTICLE.NOT_FOUND);
+    if (!article) return res.status(404).send(RESPONSE_MESSAGES.NOT_FOUND);
 
     if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER)
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
@@ -172,8 +171,7 @@ export const updateArticle = async (req, res, next) => {
   const data = req.body;
   try {
     const article = await service.getArticle({ _id });
-    if (!article)
-      return res.status(404).send(RESPONSE_MESSAGES.ARTICLE.NOT_FOUND);
+    if (!article) return res.status(404).send(RESPONSE_MESSAGES.NOT_FOUND);
 
     if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER)
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
