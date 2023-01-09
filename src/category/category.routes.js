@@ -11,7 +11,7 @@ import { ROLES } from "../helpers/roles.js";
 
 export const categoryRoutes = Router();
 
-categoryRoutes.get(ROUTES.BASE, getCategories);
+categoryRoutes.get(ROUTES.CATEGORY.GET_ALL_CATEGORIES, getCategories);
 
 categoryRoutes.get(ROUTES.CATEGORY.GET_ACTIVE_CATEGORIES, getActiveCategories);
 
