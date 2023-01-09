@@ -32,6 +32,7 @@ export const ROUTES = {
     GET_ACCESS_TOKEN_BY_REFRESH_TOKEN: "/token",
   },
   CATEGORY: {
+    GET_ALL_CATEGORIES: "/all",
     DELETE: "/delete-category/:id",
     GET_ACTIVE_CATEGORIES: "/active",
   },
