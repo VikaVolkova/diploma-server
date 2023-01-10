@@ -24,6 +24,7 @@ const makeTokenPayload = (user) => ({
   email: user.email,
   image: user.image,
   role: user.role,
+  isBlocked: user.isBlocked,
 });
 
 const makeAccessToken = (payload) => {
