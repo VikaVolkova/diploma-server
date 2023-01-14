@@ -10,10 +10,23 @@ export const getCategory = async (id) => {
   return category;
 };
 
+export const getCategoryByData = async (data) => {
+  const category = await Category.findOne(data);
+  return category;
+};
+
 export const createCategory = async (data) => {
   let category = new Category({ ...data });
   category = await category.save();
   return category;
+};
+
+export const updateCategory = async (id, name, url) => {
+  const updatedCategory = await Category.findByIdAndUpdate(id, {
+    name,
+    url,
+  });
+  return updatedCategory;
 };
 
 export const toggleCategoryActive = async (id, isDeleted) => {
