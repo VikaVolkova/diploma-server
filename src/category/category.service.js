@@ -10,8 +10,8 @@ export const getCategory = async (id) => {
   return category;
 };
 
-export const getCategoryByData = async (data) => {
-  const category = await Category.findOne(data);
+export const getCategoryByUrl = async (url) => {
+  const category = await Category.findOne({ url });
   return category;
 };
 

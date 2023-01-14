@@ -27,7 +27,7 @@ export const getCategoryByUrl = async (req, res, next) => {
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
     }
 
-    const category = await service.getCategoryByData({ url: url });
+    const category = await service.getCategoryByUrl(url);
     return res.status(200).json(category);
   } catch (err) {
     return next(err);
