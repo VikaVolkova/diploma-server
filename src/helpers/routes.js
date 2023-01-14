@@ -33,6 +33,8 @@ export const ROUTES = {
   },
   CATEGORY: {
     GET_ALL_CATEGORIES: "/all",
+    GET_CATEGORY_BY_URL: "/:url",
+    UPDATE: "/update-category/:id",
     DELETE: "/delete-category/:id",
     GET_ACTIVE_CATEGORIES: "/active",
   },

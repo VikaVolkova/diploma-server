@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const categorySchema = new Schema({
-  category: {
+  name: {
     type: String,
     required: true,
     minlength: 2,
@@ -18,6 +18,10 @@ const categorySchema = new Schema({
   isDeleted: {
     type: Boolean,
     default: false,
+  },
+  isEditable: {
+    type: Boolean,
+    default: true,
   },
 });
 
