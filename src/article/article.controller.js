@@ -1,11 +1,14 @@
-import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
-import * as service from "./article.service.js";
-import mongoose from "mongoose";
+import { RESPONSE_MESSAGES, ROLES } from '../helpers/index.js';
+import * as service from './article.service.js';
+import mongoose from 'mongoose';
+import { getPreviewArticleDTO } from '../dto/article.dto.js';
 
 export const getArticles = async (req, res, next) => {
   const query = { isPublished: true, isDeleted: false };
   try {
-    const { data, count } = await service.getArticles(query);
+    let { data, count } = await service.getArticles(query);
+
+    data = data.map((article) => getPreviewArticleDTO(article));
 
     return res.status(200).json({
       data,
@@ -18,7 +21,9 @@ export const getArticles = async (req, res, next) => {
 
 export const getPopularArticles = async (req, res, next) => {
   try {
-    const data = await service.getPopularArticles();
+    let data = await service.getPopularArticles();
+
+    data = data.map((article) => getPreviewArticleDTO(article));
 
     return res.status(200).json({
       data,
@@ -86,7 +91,9 @@ export const getArticlesByCategoryUrl = async (req, res, next) => {
   const categoryUrl = req.params.categoryUrl;
 
   try {
-    const { data, count } = await service.getArticlesByCategoryUrl(categoryUrl);
+    let { data, count } = await service.getArticlesByCategoryUrl(categoryUrl);
+
+    data = data.map((article) => getPreviewArticleDTO(article));
 
     return res.status(200).json({
       data,

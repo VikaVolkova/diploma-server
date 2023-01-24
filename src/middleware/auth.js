@@ -1,16 +1,16 @@
-import jwt from "jsonwebtoken";
-import { ACCESS_KEY, RESPONSE_MESSAGES } from "../helpers/index.js";
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN, RESPONSE_MESSAGES } from '../helpers/index.js';
 
 export const auth = (roles) => (req, res, next) => {
   const token =
     req.body.accessToken ||
     req.body.token ||
     req.query.token ||
-    req.headers["x-access-token"];
+    req.headers['x-access-token'];
   if (!token) return res.status(403).send(RESPONSE_MESSAGES.TOKEN_REQUIRED);
 
   try {
-    const payload = jwt.verify(token, ACCESS_KEY);
+    const payload = jwt.verify(token, ACCESS_TOKEN);
     if (roles.length && !roles.includes(payload.role)) {
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
     }
