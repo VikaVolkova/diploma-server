@@ -89,7 +89,7 @@ export const login = async (req, res, next) => {
   const { email, password, googleUser } = req.body;
 
   const { error } = userSchemaLogin.validate(req.body);
-  if (error) return res.status(404).send(error.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message);
 
   try {
     const user = await service.findUser(email);
