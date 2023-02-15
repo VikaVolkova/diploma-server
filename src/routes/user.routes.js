@@ -13,8 +13,8 @@ import {
   updateUser,
   deleteUser,
   toggleBlockUser,
-} from './user.controller.js';
-import { auth } from '../middleware/auth.js';
+} from '../user/user.controller.js';
+import { auth } from '../middlewares/auth.js';
 import { check } from 'express-validator';
 import { ROUTES } from '../helpers/routes.js';
 import { ROLES } from '../helpers/roles.js';
