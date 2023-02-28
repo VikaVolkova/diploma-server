@@ -1,6 +1,6 @@
-import { Types } from "mongoose";
-import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
-import * as service from "./comment.service.js";
+import { Types } from 'mongoose';
+import { RESPONSE_MESSAGES, ROLES } from '../helpers/index.js';
+import * as service from './comment.service.js';
 
 export const getCommentsByArticleId = async (req, res, next) => {
   const articleId = Types.ObjectId(req.params.articleId);
@@ -61,7 +61,7 @@ export const deleteComment = async (req, res, next) => {
     if (user.role != ROLES.ADMIN && user._id != comment.author._id)
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
 
-    const data = await service.deleteArticle(_id);
+    const data = await service.deleteComment(_id);
 
     res.status(200).send(data);
   } catch (err) {

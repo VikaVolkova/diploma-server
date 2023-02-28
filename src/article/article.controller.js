@@ -183,7 +183,8 @@ export const updateArticle = async (req, res, next) => {
     if (user.role != ROLES.ADMIN && user.role != ROLES.MANAGER)
       return res.status(403).send(RESPONSE_MESSAGES.ACCESS_DENIED);
 
-    const updatedArticle = await service.updateArticle(_id, data);
+    await service.updateArticle(_id, data);
+    const updatedArticle = await service.getArticle({ _id });
 
     res.status(200).send(updatedArticle);
   } catch (err) {
