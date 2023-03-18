@@ -1,7 +1,7 @@
-import { RESPONSE_MESSAGES, ROLES } from '../helpers/index.js';
-import * as service from './article.service.js';
-import mongoose from 'mongoose';
-import { getPreviewArticleDTO } from '../dto/article.dto.js';
+import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
+import * as service from "./article.service.js";
+import mongoose from "mongoose";
+import { getPreviewArticleDTO } from "../dto/article.dto.js";
 
 export const getArticles = async (req, res, next) => {
   const query = { isPublished: true, isDeleted: false };
