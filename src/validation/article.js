@@ -1,8 +1,8 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 export const articleSchema = Joi.object({
   title: Joi.string().min(3).max(50).required(),
-  spoiler: Joi.string().min(30).max(100).required(),
+  spoiler: Joi.string().min(30).max(150).required(),
   coverImage: Joi.string(),
   content: Joi.string().min(100).max(10000).required(),
   category: Joi.string().required(),
