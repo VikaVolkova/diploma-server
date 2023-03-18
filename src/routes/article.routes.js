@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getArticles,
   getUnpublishedArticles,
@@ -11,10 +11,10 @@ import {
   deleteArticle,
   updateArticle,
   getPopularArticles,
-} from "./article.controller.js";
-import { auth } from "../middleware/auth.js";
-import { ROUTES } from "../helpers/routes.js";
-import { ROLES } from "../helpers/roles.js";
+} from '../article/article.controller.js';
+import { auth } from '../middlewares/index.js';
+import { ROUTES } from '../helpers/routes.js';
+import { ROLES } from '../helpers/roles.js';
 
 export const articleRoutes = Router();
 

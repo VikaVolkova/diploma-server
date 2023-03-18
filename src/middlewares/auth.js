@@ -7,7 +7,6 @@ export const auth = (roles) => (req, res, next) => {
     req.body.token ||
     req.query.token ||
     req.headers['x-access-token'];
-  if (!token) return res.status(403).send(RESPONSE_MESSAGES.TOKEN_REQUIRED);
 
   try {
     const payload = jwt.verify(token, ACCESS_TOKEN);
@@ -17,7 +16,8 @@ export const auth = (roles) => (req, res, next) => {
 
     req.user = payload;
   } catch (err) {
-    res.status(400).send(RESPONSE_MESSAGES.INVALID_TOKEN);
+    err.status = 401;
+    return next(err);
   }
   return next();
 };

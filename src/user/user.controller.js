@@ -53,15 +53,11 @@ export const getAccessTokenByRefreshToken = async (req, res, next) => {
 
     const decoded = jwt.verify(refreshToken, REFRESH_TOKEN);
 
-    const payload = {
-      user_id: decoded.user_id,
-      user_role: decoded.user_role,
-      email: decoded.email,
-    };
+    const payload = makeTokenPayload(decoded);
 
     const accessToken = makeAccessToken(payload);
 
-    res.status(200).json({ accessToken });
+    res.json({ accessToken });
   } catch (err) {
     return next(err);
   }
@@ -89,7 +85,7 @@ export const login = async (req, res, next) => {
   const { email, password, googleUser } = req.body;
 
   const { error } = userSchemaLogin.validate(req.body);
-  if (error) return res.status(404).send(error.details[0].message);
+  if (error) return res.status(400).send(error.details[0].message);
 
   try {
     const user = await service.findUser(email);
@@ -107,7 +103,6 @@ export const login = async (req, res, next) => {
       const refreshToken = makeRefreshToken(payload);
 
       res.cookie(REFRESH_TOKEN, refreshToken, {
-        secure: true,
         httpOnly: true,
         SameSite: 'lax',
       });

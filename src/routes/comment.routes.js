@@ -1,14 +1,14 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getCommentsByArticleId,
   createComment,
   getUnpublishedComments,
   publishComment,
   deleteComment,
-} from "./comment.controller.js";
-import { auth } from "../middleware/auth.js";
-import { ROUTES } from "../helpers/routes.js";
-import { ROLES } from "../helpers/roles.js";
+} from '../comment/comment.controller.js';
+import { auth } from '../middlewares/auth.js';
+import { ROUTES } from '../helpers/routes.js';
+import { ROLES } from '../helpers/roles.js';
 
 export const commentRoutes = Router();
 

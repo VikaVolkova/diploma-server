@@ -1,10 +1,10 @@
-import { Comment } from "../models/comment.model.js";
+import { Comment } from '../models/comment.model.js';
 
 export const getCommentsByArticleId = async (article) => {
   const data = await Comment.find({
     article,
     isPublished: true,
-  }).populate(["article", "author"]);
+  }).populate(['article', 'author']);
   return data;
 };
 
@@ -16,7 +16,7 @@ export const createComment = async (data) => {
 
 export const getUnpublishedComments = async (limit, skip) => {
   const data = await Comment.find({ isPublished: false })
-    .populate(["article", "author"])
+    .populate(['article', 'author'])
     .sort({ date: -1 })
     .limit(limit)
     .skip(skip);
@@ -37,7 +37,7 @@ export const publishComment = async (id) => {
   return publishedComment;
 };
 
-export const deleteArticle = async (id) => {
+export const deleteComment = async (id) => {
   const comment = await Comment.findByIdAndDelete(id);
   return comment;
 };
