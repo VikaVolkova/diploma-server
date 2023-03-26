@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
-import { Category } from "./category.model.js";
-import { User } from "./user.model.js";
+import { Schema, model } from 'mongoose';
+import { Category } from './category.model.js';
+import { User } from './user.model.js';
 
 const articleSchema = new Schema({
   title: {
@@ -13,7 +13,7 @@ const articleSchema = new Schema({
     type: String,
     required: true,
     minlength: 30,
-    maxlength: 100,
+    maxlength: 150,
   },
   coverImage: {
     type: String,
@@ -49,8 +49,8 @@ const articleSchema = new Schema({
     required: true,
     maxlength: 30,
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
-export const Article = model("Article", articleSchema);
+export const Article = model('Article', articleSchema);
