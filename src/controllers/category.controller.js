@@ -1,5 +1,5 @@
 import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
-import * as service from "./category.service.js";
+import * as service from "../services/category.service.js";
 
 export const getCategories = async (req, res, next) => {
   try {

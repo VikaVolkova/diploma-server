@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   register,
   login,
@@ -13,12 +13,12 @@ import {
   updateUser,
   deleteUser,
   toggleBlockUser,
-} from '../user/user.controller.js';
-import { auth } from '../middlewares/auth.js';
-import { check } from 'express-validator';
-import { ROUTES } from '../helpers/routes.js';
-import { ROLES } from '../helpers/roles.js';
-import { REFRESH_TOKEN } from '../helpers/constants.js';
+} from "../controllers/user.controller.js";
+import { auth } from "../middlewares/auth.js";
+import { check } from "express-validator";
+import { ROUTES } from "../helpers/routes.js";
+import { ROLES } from "../helpers/roles.js";
+import { REFRESH_TOKEN } from "../helpers/constants.js";
 
 export const userRoutes = Router();
 

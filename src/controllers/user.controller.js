@@ -1,22 +1,22 @@
-import { compare } from 'bcrypt';
+import { compare } from "bcrypt";
 import {
   userSchemaRegister,
   userSchemaLogin,
   userSchemaForgotPassword,
   userSchemaRestorePassword,
-} from '../validation/user.js';
+} from "../validation/user.js";
 import {
   sendEmail,
   RESPONSE_MESSAGES,
   RESTORE_PASSWORD_URL,
   REFRESH_TOKEN,
   ACCESS_TOKEN,
-} from '../helpers/index.js';
-import jwt from 'jsonwebtoken';
+} from "../helpers/index.js";
+import jwt from "jsonwebtoken";
 
-import * as service from './user.service.js';
-import { getUserDTO } from '../dto/user.dto.js';
-import { getDataForRegister } from '../helpers/helpers.js';
+import * as service from "../services/user.service.js";
+import { getUserDTO } from "../dto/user.dto.js";
+import { getDataForRegister } from "../helpers/helpers.js";
 
 const makeTokenPayload = (user) => ({
   _id: user._id,
@@ -28,7 +28,7 @@ const makeTokenPayload = (user) => ({
 });
 
 const makeAccessToken = (payload) => {
-  const accessTokenLife = '1h';
+  const accessTokenLife = "1h";
 
   return jwt.sign(payload, ACCESS_TOKEN, {
     expiresIn: accessTokenLife,
@@ -36,7 +36,7 @@ const makeAccessToken = (payload) => {
 };
 
 const makeRefreshToken = (payload) => {
-  const refreshTokenLife = '10d';
+  const refreshTokenLife = "10d";
 
   return jwt.sign(payload, REFRESH_TOKEN, {
     expiresIn: refreshTokenLife,
@@ -104,7 +104,7 @@ export const login = async (req, res, next) => {
 
       res.cookie(REFRESH_TOKEN, refreshToken, {
         httpOnly: true,
-        SameSite: 'lax',
+        SameSite: "lax",
       });
 
       return res.status(200).json({ userData, accessToken });
