@@ -1,5 +1,5 @@
 import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
-import * as service from "./article.service.js";
+import * as service from "../services/article.service.js";
 import mongoose from "mongoose";
 import { getPreviewArticleDTO } from "../dto/article.dto.js";
 

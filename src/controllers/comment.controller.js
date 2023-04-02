@@ -1,6 +1,6 @@
-import { Types } from 'mongoose';
-import { RESPONSE_MESSAGES, ROLES } from '../helpers/index.js';
-import * as service from './comment.service.js';
+import { Types } from "mongoose";
+import { RESPONSE_MESSAGES, ROLES } from "../helpers/index.js";
+import * as service from "../services/comment.service.js";
 
 export const getCommentsByArticleId = async (req, res, next) => {
   const articleId = Types.ObjectId(req.params.articleId);

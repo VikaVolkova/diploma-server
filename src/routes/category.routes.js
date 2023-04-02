@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   getCategories,
   createCategory,
@@ -6,10 +6,10 @@ import {
   deleteCategory,
   getActiveCategories,
   getCategoryByUrl,
-} from '../category/category.controller.js';
-import { auth } from '../middlewares/auth.js';
-import { ROUTES } from '../helpers/routes.js';
-import { ROLES } from '../helpers/roles.js';
+} from "../controllers/category.controller.js";
+import { auth } from "../middlewares/auth.js";
+import { ROUTES } from "../helpers/routes.js";
+import { ROLES } from "../helpers/roles.js";
 
 export const categoryRoutes = Router();
 

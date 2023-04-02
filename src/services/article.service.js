@@ -1,12 +1,12 @@
-import { Article } from '../models/article.model.js';
-import { Category } from '../models/category.model.js';
+import { Article } from "../models/article.model.js";
+import { Category } from "../models/category.model.js";
 
 export const getArticles = async (query) => {
   const data = await Article.find(query)
     .populate([
-      'category',
-      'author',
-      { path: 'comments', match: { isPublished: true } },
+      "category",
+      "author",
+      { path: "comments", match: { isPublished: true } },
     ])
     .sort({ date: -1 });
 
@@ -18,9 +18,9 @@ export const getArticles = async (query) => {
 export const getPopularArticles = async () => {
   const data = await Article.find({ isPublished: true, isDeleted: false })
     .populate([
-      'category',
-      'author',
-      { path: 'comments', match: { isPublished: true } },
+      "category",
+      "author",
+      { path: "comments", match: { isPublished: true } },
     ])
     .sort({ likes: -1 })
     .limit(4);
@@ -28,7 +28,7 @@ export const getPopularArticles = async () => {
 };
 
 export const getArticle = async (data) => {
-  const article = await Article.findOne(data).populate(['category', 'author']);
+  const article = await Article.findOne(data).populate(["category", "author"]);
   return article;
 };
 
