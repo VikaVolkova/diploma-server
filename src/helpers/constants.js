@@ -19,4 +19,4 @@ export const CLOUDINARY_KEY = "342126722729724";
 export const CLOUDINARY_SECRET = "GfJWlWyoSORXA49HAQV4AVRheGg";
 export const CLOUDINARY_FOLDER = "CloudinaryDemo";
 
-export const ORIGIN_PATH = "https://learn-me.herokuapp.com/";
+export const ORIGIN_PATH = "https://learn-me.herokuapp.com";
