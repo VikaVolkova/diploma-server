@@ -19,4 +19,5 @@ export const CLOUDINARY_KEY = "342126722729724";
 export const CLOUDINARY_SECRET = "GfJWlWyoSORXA49HAQV4AVRheGg";
 export const CLOUDINARY_FOLDER = "CloudinaryDemo";
 
-export const ORIGIN_PATH = "https://learn-me.netlify.app";
+export const ORIGIN_PATH_DEV = "https://learn-me.netlify.app";
+export const ORIGIN_PATH_TEST = "http://localhost:3000";
